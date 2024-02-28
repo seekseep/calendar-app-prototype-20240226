@@ -4,6 +4,7 @@ import CalendarDeck from "./CalendarDeck"
 import CalendarEditDailyNoteBodyDialog from "./CalendarEditDailyNoteBodyDialog"
 import CalendarEditDailyNoteTagDialog from "./CalendarEditDailyNoteTagDialog"
 import CalendarEditScheduleDialog from "./CalendarEditScheduleDialog"
+import CalendarEditSchedulesThemeDialog from "./CalendarEditSchedulesThemeDialog"
 import CalendarProvider from "./CalendarProvider"
 import CalendarToolbar from "./CalendarToolbar"
 import CalendarThemeProvider from "./theme/Provider"
@@ -28,6 +29,7 @@ export default function Calendar (props: ({
         <CalendarEditScheduleDialog />
         <CalendarEditDailyNoteTagDialog />
         <CalendarEditDailyNoteBodyDialog />
+        <CalendarEditSchedulesThemeDialog />
       </CalendarProvider>
     </CalendarThemeProvider>
   )

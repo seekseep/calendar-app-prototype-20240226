@@ -13,37 +13,29 @@ import {
   AccordionSummary,
   AccordionDetails
 } from "@mui/material"
-import { format } from "date-fns"
 import { useForm } from "react-hook-form"
 
 import ScheduleThemeButton from "./ScheduleThemeButton"
 import { useScheduleThemes } from "./hooks"
 import { FormValues } from "./types"
 
-import { getScehduelStatusOrThrow } from "@/app/model/utilities"
 import { Schedule } from "@/app/types"
 
-export default function EditScheduelForm ({
+export default function EditScheduleThemeForm ({
   schedule,
   onCancel,
   onSubmit
 }: {
-  schedule: Schedule
+  schedule: Partial<Schedule>
   onCancel: () => any
-  onSubmit: (schedule: Schedule) => any
+  onSubmit: (schedule: Partial<Schedule>) => any
 }) {
   const methods = useForm<FormValues>({
     defaultValues: {
-      label: schedule.label,
-      startedDate: format(schedule.startedAt, 'yyyy-MM-dd'),
-      startedTime: format(schedule.startedAt, 'HH:mm'),
-      finishedTime: format(schedule.finishedAt, 'HH:mm'),
-      color: schedule.color,
-      borderColor: schedule.borderColor,
-      backgroundColor: schedule.backgroundColor,
+      color: schedule.color ?? '',
+      borderColor: schedule.borderColor ?? '',
+      backgroundColor: schedule.backgroundColor ?? '',
       errorIcon: schedule.errorIcon ? 1 : 0,
-      row: schedule.row,
-      status: schedule.status
     }
   })
 
@@ -55,17 +47,10 @@ export default function EditScheduelForm ({
       padding={2}
       onSubmit={methods.handleSubmit(values => {
         onSubmit({
-          accountId: schedule.accountId,
-          id: schedule.id,
-          label: values.label,
-          startedAt: new Date(`${values.startedDate} ${values.startedTime}`).toISOString(),
-          finishedAt: new Date(`${values.startedDate} ${values.finishedTime}`).toISOString(),
           color: values.color,
           borderColor: values.borderColor,
           backgroundColor: values.backgroundColor,
           errorIcon: values.errorIcon === 1 ? true : false,
-          row: values.row,
-          status: getScehduelStatusOrThrow(schedule.status),
         })
       })}>
       <Accordion defaultExpanded variant="outlined">
@@ -104,36 +89,6 @@ export default function EditScheduelForm ({
               </Grid>
             ))}
           </Grid>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion variant="outlined">
-        <AccordionSummary>
-          詳細
-        </AccordionSummary>
-        <AccordionDetails>
-          <Stack direction="column" gap={3}>
-            <Stack direction="row" gap={2}>
-              <TextField fullWidth label="表示名" {...methods.register('label')} />
-              <FormControl fullWidth>
-                <InputLabel id="status-select-label">状態</InputLabel>
-                <Select
-                  id="status-select"
-                  labelId="status-select-label"
-                  value={methods.watch('status')}
-                  {...methods.register('status')}
-                  label="状態">
-                  <MenuItem value={"NORMAL"}>通常</MenuItem>
-                  <MenuItem value={"CANCELED"}>振替待ち</MenuItem>
-                </Select>
-              </FormControl>
-            </Stack>
-            <Stack direction="row" gap={2}>
-              <TextField fullWidth label="日付" {...methods.register('startedDate')} type="date" />
-              <TextField fullWidth label="行" {...methods.register('row')} type="number" />
-              <TextField fullWidth label="開始" {...methods.register('startedTime')} type="time" />
-              <TextField fullWidth label="終了" {...methods.register('finishedTime')} type="time" />
-            </Stack>
-          </Stack>
         </AccordionDetails>
       </Accordion>
       <DialogActions>

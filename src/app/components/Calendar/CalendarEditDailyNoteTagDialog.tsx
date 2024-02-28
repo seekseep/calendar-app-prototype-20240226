@@ -3,16 +3,17 @@ import { useForm } from "react-hook-form"
 import { v4 as uuid } from "uuid"
 
 import { useCalendar } from "./hooks"
-import { DailyNoteDraft } from "./types"
+
+import { DailyNote } from "@/app/types"
 
 function CalendarEditDailyNoteTagForm ({
   dailyNote,
   onClose,
   onSubmit
 }: {
-  dailyNote: DailyNoteDraft
+  dailyNote: Partial<Pick<DailyNote, 'id'>> & Omit<DailyNote, 'id'>
   onClose: () => void
-  onSubmit: (dailyNote: DailyNoteDraft) => void
+  onSubmit: (dailyNote: Partial<Pick<DailyNote, 'id'>> & Omit<DailyNote, 'id'>) => void
 }) {
   const methods = useForm<{ tag: string }>({
     defaultValues: {

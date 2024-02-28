@@ -9,10 +9,10 @@ import { db } from "../mocks/db"
 import { createAccount } from "../model/account"
 import { createDailyNote } from "../model/dailyNote"
 import { createSchedule } from "../model/schedule"
-import { DailyNote, Schedule } from "../types"
+import { DailyNote } from "../types"
 
 import Calendar from "./Calendar"
-import { CalendarOptions } from "./Calendar/types"
+import { CalendarOptions, UpdateDailyNoteInput, UpdateScheduleInput } from "./Calendar/types"
 
 export default function ViewCalendar() {
   const [options, setOptions] = useState<CalendarOptions>(() => {
@@ -48,21 +48,12 @@ export default function ViewCalendar() {
   })
 
   const updateMutation = useMutation({
-    async mutationFn (schedule: Schedule) {
+    async mutationFn ({ id, ...data}: UpdateScheduleInput) {
       db.schedule.update({
         where: {
-          id: { equals: schedule.id }
+          id: { equals: id }
         },
-        data: {
-          label: schedule.label,
-          startedAt: schedule.startedAt,
-          finishedAt: schedule.finishedAt,
-          color: schedule.color,
-          borderColor: schedule.borderColor,
-          backgroundColor: schedule.backgroundColor,
-          errorIcon: schedule.errorIcon,
-          row: schedule.row
-        }
+        data: data
       })
     },
     onSuccess () {
@@ -88,10 +79,7 @@ export default function ViewCalendar() {
   const updateDailyNoteMutation = useMutation({
     async mutationFn ({
       id, ...data
-    }: (
-      Pick<DailyNote,'id'>
-      & Partial<Omit<DailyNote, 'id'>>
-    )) {
+    }: UpdateDailyNoteInput) {
       db.dailyNote.update({
         where: {
           id: { equals: id }

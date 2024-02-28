@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react"
 
 import { createRows } from "./services/calendarPack"
 import { useCalendarTheme, useDailyNoteWidth, useHourHeight, useHourWidth, useRowHeaderWidth, useScheduleRowHeight } from "./theme/hooks"
-import { CalendarContextValue, CalendarEvents, CalendarOptions, CalendarSettings, CalendarStatus, DailyNoteDraft } from "./types"
+import { CalendarContextValue, CalendarEvents, CalendarOptions, CalendarSettings, CalendarStatus, UpdateDailyNoteInput, UpdateScheduleInput } from "./types"
 
 import { Account, DailyNote, Schedule } from "@/app/types"
 
@@ -19,11 +19,14 @@ const defaultCalendarContextValue: CalendarContextValue = {
   rows: [],
   tags: [],
   cancledSchedules: [],
+  selectedSchedules: [],
   rowsUpdatedAt: -1,
   scheduleToEdit: null,
   dailyNoteToEditTag: null,
   dailyNoteToEditBody: null,
+  toggleSelectedSchedule: () => undefined,
   openSchedule: () => undefined,
+  openSchedules: () => undefined,
   closeSchedule: () => undefined,
   changeOptions: () => undefined,
   createSchedule: () => undefined,
@@ -35,6 +38,9 @@ const defaultCalendarContextValue: CalendarContextValue = {
   closeDailyNoteBody: () => undefined,
   createDailyNote: () => undefined,
   updateDailyNote: () => undefined,
+  clearSelectedSchedules: () => undefined,
+  closeSchedules: () => undefined,
+  schedulesToEdit: null,
 }
 
 export const CalendarContext = createContext<CalendarContextValue>(defaultCalendarContextValue)
@@ -59,8 +65,10 @@ export function useCalendarValue ({
   const [status, setStatus] = useState<CalendarStatus>('loading')
 
   const [scheduleToEdit, setScheduleToEdit] = useState<Schedule | null>(null)
-  const [dailyNoteToEditTag, setDailyNoteToEditTag] = useState<DailyNoteDraft | null>(null)
-  const [dailyNoteToEditBody, setDailyNoteToEditBody] = useState<DailyNoteDraft | null>(null)
+  const [schedulesToEdit, setSchedulesToEdit] = useState<Schedule[] | null>(null)
+  const [selectedSchedules, setSelectedSchedules] = useState<Schedule[]>([])
+  const [dailyNoteToEditTag, setDailyNoteToEditTag] = useState<Partial<Pick<DailyNote, 'id'>> & Omit<DailyNote, 'id'> | null>(null)
+  const [dailyNoteToEditBody, setDailyNoteToEditBody] = useState<Partial<Pick<DailyNote, 'id'>> & Omit<DailyNote, 'id'> | null>(null)
 
   const cancledSchedules = useMemo(() => {
     return schedules?.filter(schedule => schedule.status === 'CANCELED') ?? []
@@ -120,6 +128,8 @@ export function useCalendarValue ({
     dailyNoteToEditTag,
     dailyNoteToEditBody,
     cancledSchedules,
+    selectedSchedules,
+    schedulesToEdit,
     changeOptions: (updated: Partial<CalendarOptions>) => {
       if (!onChangeOptions) return
       onChangeOptions({
@@ -131,16 +141,35 @@ export function useCalendarValue ({
         hourSectionCount: updated.hourSectionCount ?? settings.hourSectionCount,
       })
     },
+    toggleSelectedSchedule(schedule: Schedule) {
+      const index = selectedSchedules.findIndex(s => s.id === schedule.id)
+      if (index === -1) {
+        setSelectedSchedules([...selectedSchedules, schedule])
+      } else {
+        setSelectedSchedules(
+          selectedSchedules.slice(0, index).concat(selectedSchedules.slice(index + 1))
+        )
+      }
+    },
+    clearSelectedSchedules() {
+      setSelectedSchedules([])
+    },
     openSchedule: (schedule: Schedule) => {
       setScheduleToEdit(schedule)
     },
-    openDailyNoteTag: (dailyNote: DailyNoteDraft) => {
+    openSchedules: (schedules: Schedule[]) => {
+      setSchedulesToEdit(schedules)
+    },
+    closeSchedules: () => {
+      setSchedulesToEdit(null)
+    },
+    openDailyNoteTag: (dailyNote: Partial<Pick<DailyNote, 'id'>> & Omit<DailyNote, 'id'>) => {
       setDailyNoteToEditTag(dailyNote)
     },
     closeDailyNoteTag: () => {
       setDailyNoteToEditTag(null)
     },
-    openDailyNoteBody: (dailyNote: DailyNoteDraft) => {
+    openDailyNoteBody: (dailyNote: Partial<Pick<DailyNote, 'id'>> & Omit<DailyNote, 'id'>) => {
       setDailyNoteToEditBody(dailyNote)
     },
     closeDailyNoteBody: () => {
@@ -149,7 +178,7 @@ export function useCalendarValue ({
     closeSchedule: () => {
       setScheduleToEdit(null)
     },
-    updateDailyNote: (dailyNote: DailyNoteDraft) => {
+    updateDailyNote: (dailyNote: UpdateDailyNoteInput) => {
       onUpdateDailyNote && onUpdateDailyNote(dailyNote)
     },
     createDailyNote: (dailyNote: DailyNote) => {
@@ -158,7 +187,7 @@ export function useCalendarValue ({
     createSchedule: (schedule: Schedule) => {
       onCreateSchedule && onCreateSchedule(schedule)
     },
-    updateSchedule: (schedule: Schedule) => {
+    updateSchedule: (schedule: UpdateScheduleInput) => {
       onUpdateSchedule && onUpdateSchedule(schedule)
     },
     deleteSchedule: (schedule: Schedule) => {

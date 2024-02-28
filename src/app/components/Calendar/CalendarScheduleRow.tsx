@@ -15,7 +15,7 @@ export default function CalendarScheduleRow ({
     hourWidth,
     scheduleHeight,
   } = useCalendarTheme()
-  const { startHour, openSchedule } = useCalendar()
+  const { startHour, openSchedule, toggleSelectedSchedule, selectedSchedules } = useCalendar()
 
   return (
     <Box display="flex" width="0" height={scheduleRowHeight} position="relative">
@@ -27,10 +27,15 @@ export default function CalendarScheduleRow ({
         const x = (sStartHour - startHour) * hourWidth
         const width = (sEndHour - sStartHour) * hourWidth
         const y = (scheduleRowHeight - scheduleHeight) / 2
+        const selected = selectedSchedules.findIndex(s => s.id === schedule.id) !== -1
         return (
           <CalendarSchedule
             key={index}
-            onDoubleClick={() => openSchedule(schedule)}
+            onEdit={() => openSchedule(schedule)}
+            onClick={() => {
+              console.log('click')
+              toggleSelectedSchedule(schedule)
+            }}
             schedule={schedule}
             sx={{
               position: 'absolute',
@@ -38,6 +43,11 @@ export default function CalendarScheduleRow ({
               top: y,
               width,
               height: scheduleHeight,
+              ...(selected ? ({
+                outlineStyle: 'solid',
+                outlineWidth: 2,
+                outlineColor: 'primary.main',
+              }) : undefined)
             }} />
         )
       })}

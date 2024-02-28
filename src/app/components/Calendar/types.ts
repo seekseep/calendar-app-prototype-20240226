@@ -11,18 +11,23 @@ export interface CalendarSettings {
 
 export type CalendarStatus = 'loading' | 'ready'
 
-export type DailyNoteDraft = (
-  Partial<Pick<DailyNote, 'id'>>
-  & Omit<DailyNote, 'id'>
+export type UpdateDailyNoteInput = (
+  Pick<DailyNote, 'id'>
+  & Partial<Omit<DailyNote, 'id'>>
+)
+
+export type UpdateScheduleInput = (
+  Pick<Schedule, 'id'>
+  & Partial<Omit<Schedule, 'id'>>
 )
 
 export interface CalendarEvents {
   onChangeOptions?: (options: CalendarOptions) => any
   onCreateSchedule?: (schedule: Schedule) => any
-  onUpdateSchedule?: (schedule: Schedule) => any
+  onUpdateSchedule?: (schedule: UpdateScheduleInput) => any
   onDeleteSchedule?: (schedule: Schedule) => any
   onCreateDailyNote?: (dailyNote: DailyNote) => any
-  onUpdateDailyNote?: (dailyNote: DailyNoteDraft) => any
+  onUpdateDailyNote?: (dailyNote: UpdateDailyNoteInput) => any
 }
 
 export type CalendarState = (
@@ -34,24 +39,30 @@ export type CalendarState = (
     rowsUpdatedAt: number
     cancledSchedules: Schedule[]
     scheduleToEdit: Schedule | null
-    dailyNoteToEditTag: DailyNoteDraft | null
-    dailyNoteToEditBody: DailyNoteDraft | null
+    schedulesToEdit: Schedule[] | null
+    dailyNoteToEditTag: Partial<Pick<DailyNote, 'id'>> & Omit<DailyNote, 'id'> | null
+    dailyNoteToEditBody: Partial<Pick<DailyNote, 'id'>> & Omit<DailyNote, 'id'> | null
+    selectedSchedules: Schedule[]
   }
 )
 
 export type CalendarHelpers = {
   changeOptions: (options: CalendarOptions) => any
   createSchedule: (schedule: Schedule) => any
-  updateSchedule: (schedule: Schedule) => any
+  updateSchedule: (schedule: UpdateScheduleInput) => any
   deleteSchedule: (schedule: Schedule) => any
   openSchedule: (schedule: Schedule) => any
+  openSchedules: (schedules: Schedule[]) => any
   closeSchedule: () => any
-  openDailyNoteTag: (dailyNote: DailyNoteDraft) => any
+  closeSchedules: () => any
+  openDailyNoteTag: (dailyNote: Partial<Pick<DailyNote, 'id'>> & Omit<DailyNote, 'id'>) => any
   closeDailyNoteTag: () => any
-  openDailyNoteBody: (dailyNote: DailyNoteDraft) => any
+  openDailyNoteBody: (dailyNote: Partial<Pick<DailyNote, 'id'>> & Omit<DailyNote, 'id'>) => any
   closeDailyNoteBody: () => any
   createDailyNote: (dailyNote: DailyNote) => any
-  updateDailyNote: (dailyNote: DailyNoteDraft) => any
+  updateDailyNote: (dailyNote: UpdateDailyNoteInput) => any
+  toggleSelectedSchedule: (schedule: Schedule) => any
+  clearSelectedSchedules: () => any
 }
 
 export type CalendarContextValue = (

@@ -9,6 +9,7 @@ import EditScheduelForm from "./EditScheduleForm"
 
 export default function CalendarEditScheduleDialog () {
   const { scheduleToEdit, closeSchedule, updateSchedule } = useCalendar()
+  console.log({scheduleToEdit})
 
   return (
     <Dialog
@@ -20,7 +21,10 @@ export default function CalendarEditScheduleDialog () {
           schedule={scheduleToEdit}
           onCancel={() => closeSchedule()}
           onSubmit={(schedule) => {
-            updateSchedule(schedule)
+            updateSchedule({
+              ...scheduleToEdit,
+              ...schedule,
+            })
             closeSchedule()
           }} />
       )}

@@ -1,5 +1,5 @@
-import CalendarSchedule from "../CalendarSchedule"
-import { useCalendarTheme } from "../theme/hooks"
+import CalendarSchedule from "../../CalendarSchedule"
+import { useCalendarTheme } from "../../theme/hooks"
 
 import { ScheduleTheme } from "./types"
 

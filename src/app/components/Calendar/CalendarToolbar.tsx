@@ -6,7 +6,7 @@ import { useCalendar } from "./hooks"
 import { CalendarSettings } from "./types"
 
 export default function CalendarToolbar () {
-  const { startDate, endDate, changeOptions, status } = useCalendar()
+  const { startDate, endDate, changeOptions, status, selectedSchedules, clearSelectedSchedules,openSchedules } = useCalendar()
 
   const changeDateOptions = (
     nextOptions: Partial<CalendarSettings>,
@@ -42,6 +42,8 @@ export default function CalendarToolbar () {
     })
   }
 
+  const selectedSchedulesCount = selectedSchedules.length
+
   return (
     <Toolbar
       variant="dense"
@@ -51,35 +53,46 @@ export default function CalendarToolbar () {
         borderBottomColor: 'divider',
         borderBottomStyle: 'solid'
       }}>
-      <Stack direction="row" gap={3} alignItems="center">
-        <Button variant="outlined">今日</Button>
-        <Stack direction="row" gap={1}>
-          <IconButton onClick={() => {
-            const currentDaysDiff = (new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24)
-            changeDateOptions({
-              startDate: format(sub(new Date(startDate), { days: currentDaysDiff }), 'yyyy-MM-dd'),
-              endDate: format(sub(new Date(endDate), { days: currentDaysDiff }), 'yyyy-MM-dd')
-            })
-          }}>
-            <ChevronLeft />
-          </IconButton>
-          <Stack direction="row" gap={1} alignItems="center">
-            <TextField size="small" type="date" value={startDate} onChange={event => changeDateOptions({ startDate: event.target.value })} />
-            <Typography>-</Typography>
-            <TextField size="small" type="date" value={endDate} onChange={event => changeDateOptions({ endDate: event.target.value })} />
+      {selectedSchedulesCount < 1 ? (
+        <Stack direction="row" gap={3} alignItems="center">
+          <Button variant="outlined">今日</Button>
+          <Stack direction="row" gap={1}>
+            <IconButton onClick={() => {
+              const currentDaysDiff = (new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24)
+              changeDateOptions({
+                startDate: format(sub(new Date(startDate), { days: currentDaysDiff }), 'yyyy-MM-dd'),
+                endDate: format(sub(new Date(endDate), { days: currentDaysDiff }), 'yyyy-MM-dd')
+              })
+            }}>
+              <ChevronLeft />
+            </IconButton>
+            <Stack direction="row" gap={1} alignItems="center">
+              <TextField size="small" type="date" value={startDate} onChange={event => changeDateOptions({ startDate: event.target.value })} />
+              <Typography>-</Typography>
+              <TextField size="small" type="date" value={endDate} onChange={event => changeDateOptions({ endDate: event.target.value })} />
+            </Stack>
+            <IconButton onClick={() => {
+              const currentDaysDiff = (new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24)
+              changeDateOptions({
+                startDate: format(add(new Date(startDate), { days: currentDaysDiff }), 'yyyy-MM-dd'),
+                endDate: format(add(new Date(endDate), { days: currentDaysDiff }), 'yyyy-MM-dd')
+              })
+            }}>
+              <ChevronRight />
+            </IconButton>
           </Stack>
-          <IconButton onClick={() => {
-            const currentDaysDiff = (new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24)
-            changeDateOptions({
-              startDate: format(add(new Date(startDate), { days: currentDaysDiff }), 'yyyy-MM-dd'),
-              endDate: format(add(new Date(endDate), { days: currentDaysDiff }), 'yyyy-MM-dd')
-            })
-          }}>
-            <ChevronRight />
-          </IconButton>
+          {status == 'loading' && <CircularProgress size={20} />}
         </Stack>
-        {status == 'loading' && <CircularProgress size={20} />}
-      </Stack>
+      ) : (
+        <Stack direction="row" gap={2} alignItems="center">
+          <Typography>{selectedSchedulesCount} 件選択中</Typography>
+          <Button size="small" variant="outlined" onClick={clearSelectedSchedules}>選択解除</Button>
+          <Button size="small" variant="outlined" onClick={() => {
+            openSchedules(selectedSchedules)
+            clearSelectedSchedules()
+          }}>編集</Button>
+        </Stack>
+      )}
     </Toolbar>
   )
 }
