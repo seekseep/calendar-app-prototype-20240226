@@ -33,7 +33,6 @@ export default function CalendarScheduleRow ({
             key={index}
             onEdit={() => openSchedule(schedule)}
             onClick={() => {
-              console.log('click')
               toggleSelectedSchedule(schedule)
             }}
             schedule={schedule}

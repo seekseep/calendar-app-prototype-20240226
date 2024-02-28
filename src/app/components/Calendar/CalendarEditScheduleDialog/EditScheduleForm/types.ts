@@ -7,7 +7,7 @@ export type FormValues = {
   borderColor: string
   backgroundColor: string
   errorIcon: number
-  row: number
+  row: string
   status: string
 }
 

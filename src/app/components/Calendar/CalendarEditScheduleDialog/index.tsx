@@ -9,7 +9,6 @@ import EditScheduelForm from "./EditScheduleForm"
 
 export default function CalendarEditScheduleDialog () {
   const { scheduleToEdit, closeSchedule, updateSchedule } = useCalendar()
-  console.log({scheduleToEdit})
 
   return (
     <Dialog

@@ -62,7 +62,7 @@ export default function EditScheduelForm ({
           borderColor: values.borderColor,
           backgroundColor: values.backgroundColor,
           errorIcon: values.errorIcon === 1 ? true : false,
-          row: values.row,
+          row: +values.row,
           status: getScehduelStatusOrThrow(schedule.status),
         })
       })}>
