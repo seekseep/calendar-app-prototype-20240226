@@ -1,5 +1,6 @@
 import CalendarSchedule from "../CalendarSchedule"
 import { useCalendarTheme } from "../theme/hooks"
+
 import { ScheduleTheme } from "./types"
 
 export default function ScheduleThemeButton ({

@@ -1,7 +1,9 @@
-import { Box, Button, Dialog, DialogActions, DialogTitle, TextField } from "@mui/material";
-import { useCalendar } from "./hooks";
-import { useForm } from "react-hook-form";
-import { DailyNote } from "@/app/types";
+import { Box, Button, Dialog, DialogActions, DialogTitle, TextField } from "@mui/material"
+import { useForm } from "react-hook-form"
+
+import { useCalendar } from "./hooks"
+
+import { DailyNote } from "@/app/types"
 
 function CalendarEditDailyNoteBodyForm ({
   dailyNote,
@@ -41,7 +43,7 @@ function CalendarEditDailyNoteBodyForm ({
 }
 
 export default function CalednarEditDailyNoteBodyDialog () {
-  const { dailyNoteToEditBody, closeDailyNoteBody, updateDailyNote  } = useCalendar()
+  const { dailyNoteToEditBody, closeDailyNoteBody, updateDailyNote } = useCalendar()
 
   return (
     <Dialog

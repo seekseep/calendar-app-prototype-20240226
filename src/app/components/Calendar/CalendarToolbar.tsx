@@ -1,8 +1,9 @@
-import { Button, Stack, TextField, Toolbar, IconButton, Typography, CircularProgress } from "@mui/material"
 import { ChevronLeft, ChevronRight } from '@mui/icons-material'
+import { Button, Stack, TextField, Toolbar, IconButton, Typography, CircularProgress } from "@mui/material"
+import { add, format, sub } from "date-fns"
+
 import { useCalendar } from "./hooks"
 import { CalendarSettings } from "./types"
-import { add, format, sub } from "date-fns"
 
 export default function CalendarToolbar () {
   const { startDate, endDate, changeOptions, status } = useCalendar()

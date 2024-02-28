@@ -1,7 +1,8 @@
-import { CalendaRowPayload } from "./types";
-import CalendarScheduleRowGroup from "./CalendarScheduleRowGroup";
-import CalendarRowGroup from "./CalendarRowGroup";
-import { CSSProperties } from "react";
+import { CSSProperties } from "react"
+
+import CalendarRowGroup from "./CalendarRowGroup"
+import CalendarScheduleRowGroup from "./CalendarScheduleRowGroup"
+import { CalendaRowPayload } from "./types"
 
 export default function CalendarRow ({
   row,

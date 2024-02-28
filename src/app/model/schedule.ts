@@ -1,5 +1,6 @@
-import { Schedule } from "../types";
-import { getNumberOrThrow, getScehduelStatusOrThrow, getStringOrThrow } from "./utilities";
+import { Schedule } from "../types"
+
+import { getNumberOrThrow, getScehduelStatusOrThrow, getStringOrThrow } from "./utilities"
 
 export function createSchedule(data: any): Schedule {
   return {

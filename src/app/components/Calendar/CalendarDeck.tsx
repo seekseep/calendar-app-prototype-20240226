@@ -1,6 +1,7 @@
 'use client'
 
 import { Box } from '@mui/material'
+
 import { useDeckWidth } from './theme/hooks'
 
 export default function CalendarDeck () {

@@ -1,5 +1,6 @@
-import { Account } from "../types";
-import { getStringOrThrow } from "./utilities";
+import { Account } from "../types"
+
+import { getStringOrThrow } from "./utilities"
 
 export function createAccount(data: any): Account {
   return {

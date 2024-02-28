@@ -1,9 +1,11 @@
 'use client'
 
-import { PropsWithChildren } from "react";
-import { CalendarContext, useCalendarValue } from "./hooks";
-import { CalendarEvents, CalendarOptions } from "./types";
-import { Account, DailyNote, Schedule } from "@/app/types";
+import { PropsWithChildren } from "react"
+
+import { CalendarContext, useCalendarValue } from "./hooks"
+import { CalendarEvents, CalendarOptions } from "./types"
+
+import { Account, DailyNote, Schedule } from "@/app/types"
 
 export default function CalendarProvider ({
   children,

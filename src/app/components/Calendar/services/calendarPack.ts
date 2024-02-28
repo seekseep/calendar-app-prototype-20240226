@@ -1,6 +1,8 @@
-import { Account, DailyNote, Schedule } from "@/app/types"
 import { add, format } from "date-fns"
-import { CalendarRowGroupPayload, CalendarScheduleRowGroupPayload, CalendarScheduleRowPayload } from "../types"
+
+import { CalendarRowGroupPayload, CalendarScheduleRowGroupPayload } from "../types"
+
+import { Account, DailyNote, Schedule } from "@/app/types"
 
 export function createRows (
   startDate: string,

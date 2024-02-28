@@ -1,8 +1,9 @@
 'use client'
 
-import { PropsWithChildren } from "react";
-import { AppBar, Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from "@mui/material";
+import { PropsWithChildren } from "react"
+
 import { Star } from '@mui/icons-material'
+import { AppBar, Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from "@mui/material"
 
 const drawerWidth = 240
 

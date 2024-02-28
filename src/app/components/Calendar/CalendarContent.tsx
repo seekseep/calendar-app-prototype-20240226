@@ -1,13 +1,15 @@
 'use client'
 
-import { Box } from "@mui/material";
-import CalendarTimeRuler from "./CalendarTimeRuler";
-import CaelndarRow from "./CalendarRow";
-import { useCalendar, useHours } from "./hooks";
+import { HTMLAttributes, forwardRef, useEffect, useRef, useState } from "react"
+
+import { Box } from "@mui/material"
 import { VariableSizeList } from 'react-window'
-import { CalendaRowPayload } from "./types";
-import { useCalendarTheme } from "./theme/hooks";
-import { HTMLAttributes, forwardRef, useEffect, useRef, useState } from "react";
+
+import CaelndarRow from "./CalendarRow"
+import CalendarTimeRuler from "./CalendarTimeRuler"
+import { useCalendar } from "./hooks"
+import { useCalendarTheme } from "./theme/hooks"
+import { CalendaRowPayload } from "./types"
 
 const ListInner = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   function ListInner ({ children, ...props}, ref) {

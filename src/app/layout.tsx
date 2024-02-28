@@ -1,15 +1,17 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import CssBaseline from '@mui/material/CssBaseline';
-import Layout from "./components/Layout";
-import BaseProvider from "./components/BaseProvider";
+import CssBaseline from '@mui/material/CssBaseline'
+import { Inter } from "next/font/google"
 
-const inter = Inter({ subsets: ["latin"] });
+import BaseProvider from "./components/BaseProvider"
+import Layout from "./components/Layout"
+
+import type { Metadata } from "next"
+
+const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "カレンダーのプロトタイプ",
   description: "カレンダーのプロトタイプ",
-};
+}
 
 export default function RootLayout({
   children,
@@ -27,5 +29,5 @@ export default function RootLayout({
         </BaseProvider>
       </body>
     </html>
-  );
+  )
 }

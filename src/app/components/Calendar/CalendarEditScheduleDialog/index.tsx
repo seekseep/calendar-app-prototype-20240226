@@ -1,9 +1,11 @@
 import {
   Dialog,
   DialogTitle,
-} from "@mui/material";
-import { useCalendar } from "../hooks";
-import EditScheduelForm from "./EditScheduleForm";
+} from "@mui/material"
+
+import { useCalendar } from "../hooks"
+
+import EditScheduelForm from "./EditScheduleForm"
 
 export default function CalendarEditScheduleDialog () {
   const { scheduleToEdit, closeSchedule, updateSchedule } = useCalendar()

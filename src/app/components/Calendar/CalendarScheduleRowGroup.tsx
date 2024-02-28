@@ -1,12 +1,14 @@
-import { Box, Stack, Chip, Typography, Menu, MenuItem, Divider } from "@mui/material";
-import { CalendarScheduleRowGroupPayload, CalendarScheduleRowPayload } from "./types";
-import { useCalendarTheme, useDailyNoteWidth, useScheduleRowHeight } from "./theme/hooks";
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { useCalendar, useCalendarRowWidth } from "./hooks";
-import CalendarRowHead from "./CalendarRowHead";
-import CalendarScheduleRow from "./CalendarScheduleRow";
-import { CSSProperties, memo, useState, MouseEvent } from "react";
-import CalendarScheduleRowTimeRuler from "./CalendarScheduleRowTimeRuler";
+import { CSSProperties, useState, MouseEvent } from "react"
+
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
+import { Box, Stack, Chip, Typography, Menu, MenuItem, Divider } from "@mui/material"
+
+import CalendarRowHead from "./CalendarRowHead"
+import CalendarScheduleRow from "./CalendarScheduleRow"
+import CalendarScheduleRowTimeRuler from "./CalendarScheduleRowTimeRuler"
+import { useCalendar, useCalendarRowWidth } from "./hooks"
+import { useCalendarTheme } from "./theme/hooks"
+import { CalendarScheduleRowGroupPayload } from "./types"
 
 export default function CalendarScheduleRowGroup ({
   depth = 0,
@@ -23,14 +25,14 @@ export default function CalendarScheduleRowGroup ({
   const rowWidth = useCalendarRowWidth(depth)
   const bodyWidth = (endHour - startHour + 1) * hourWidth
 
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const open = Boolean(anchorEl)
   const handleClick = (event: MouseEvent<HTMLDivElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+    setAnchorEl(event.currentTarget)
+  }
   const handleClose = () => {
-    setAnchorEl(null);
-  };
+    setAnchorEl(null)
+  }
 
   return (
     <div>

@@ -1,8 +1,9 @@
 'use client'
 
-import { Box, useTheme, Typography } from "@mui/material";
-import { useCalendarWidth, useHours, useRowDepth } from "./hooks";
-import { useCalendarTheme, useDailyNoteWidth, useHourHeight, useHourWidth, useRowHeaderWidth } from "./theme/hooks";
+import { Box, useTheme, Typography } from "@mui/material"
+
+import { useCalendarWidth, useHours, useRowDepth } from "./hooks"
+import { useCalendarTheme, useDailyNoteWidth, useHourHeight, useHourWidth, useRowHeaderWidth } from "./theme/hooks"
 
 export default function CalendarTimeRuler () {
   const { zIndex } = useCalendarTheme()

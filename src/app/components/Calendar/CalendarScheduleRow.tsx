@@ -1,8 +1,9 @@
-import { Box, Typography, useTheme } from "@mui/material";
-import { CalendarScheduleRowPayload } from "./types";
-import { useCalendarTheme } from "./theme/hooks";
-import { useCalendar } from "./hooks";
-import CalendarSchedule from "./CalendarSchedule";
+import { Box } from "@mui/material"
+
+import CalendarSchedule from "./CalendarSchedule"
+import { useCalendar } from "./hooks"
+import { useCalendarTheme } from "./theme/hooks"
+import { CalendarScheduleRowPayload } from "./types"
 
 export default function CalendarScheduleRow ({
   row

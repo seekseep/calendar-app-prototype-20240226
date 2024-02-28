@@ -1,5 +1,6 @@
-import { DailyNote } from "../types";
-import { getStringOrThrow } from "./utilities";
+import { DailyNote } from "../types"
+
+import { getStringOrThrow } from "./utilities"
 
 export function createDailyNote (data: any): DailyNote {
   const type = getStringOrThrow(data?.type)

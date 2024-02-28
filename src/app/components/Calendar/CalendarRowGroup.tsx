@@ -1,10 +1,12 @@
-import { Box, ButtonBase, Typography } from "@mui/material";
-import { CalendarRowGroupPayload } from "./types";
-import CalendarRow from "./CalendarRow";
-import { useCalendar, useCalendarRowWidth } from "./hooks";
-import CalendarRowHead from "./CalendarRowHead";
-import { useCalendarTheme } from "./theme/hooks";
-import { CSSProperties } from "react";
+import { CSSProperties } from "react"
+
+import { Box, ButtonBase, Typography } from "@mui/material"
+
+import CalendarRow from "./CalendarRow"
+import CalendarRowHead from "./CalendarRowHead"
+import { useCalendar, useCalendarRowWidth } from "./hooks"
+import { useCalendarTheme } from "./theme/hooks"
+import { CalendarRowGroupPayload } from "./types"
 
 export default function CalendarGroupRow ({
   depth = 0,

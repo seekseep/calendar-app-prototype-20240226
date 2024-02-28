@@ -1,5 +1,6 @@
-import { Box } from "@mui/material";
-import { memo, useMemo } from "react";
+import { memo, useMemo } from "react"
+
+import { Box } from "@mui/material"
 
 const CalendarScheduleRowTimeRuler = memo(function CalendarScheduleRowTimeRuler ({
   startHour,

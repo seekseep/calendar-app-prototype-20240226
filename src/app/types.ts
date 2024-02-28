@@ -37,4 +37,4 @@ export interface AccountDailyNote {
   date: string
 }
 
-export type DailyNote  = TeamDailyNote | AccountDailyNote
+export type DailyNote = TeamDailyNote | AccountDailyNote

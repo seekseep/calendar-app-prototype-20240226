@@ -1,6 +1,7 @@
-import { Schedule } from '@/app/types';
-import { Box, BoxProps, Typography } from '@mui/material';
 import { Error } from '@mui/icons-material'
+import { Box, BoxProps, Typography } from '@mui/material'
+
+import { Schedule } from '@/app/types'
 
 export default function CalendarSchedule ({
   schedule,

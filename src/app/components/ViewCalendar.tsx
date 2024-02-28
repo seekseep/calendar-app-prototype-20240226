@@ -1,15 +1,18 @@
 "use client"
 
 import { useState } from "react"
-import Calendar from "./Calendar"
-import { CalendarOptions } from "./Calendar/types"
-import { endOfWeek, format, startOfWeek } from "date-fns"
+
 import { useMutation, useQuery } from "@tanstack/react-query"
+import { endOfWeek, format, startOfWeek } from "date-fns"
+
 import { db } from "../mocks/db"
 import { createAccount } from "../model/account"
+import { createDailyNote } from "../model/dailyNote"
 import { createSchedule } from "../model/schedule"
 import { DailyNote, Schedule } from "../types"
-import { createDailyNote } from "../model/dailyNote"
+
+import Calendar from "./Calendar"
+import { CalendarOptions } from "./Calendar/types"
 
 export default function ViewCalendar() {
   const [options, setOptions] = useState<CalendarOptions>(() => {

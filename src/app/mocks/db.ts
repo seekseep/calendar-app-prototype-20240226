@@ -1,6 +1,6 @@
-import { factory, nullable, primaryKey } from "@mswjs/data";
-import { v4 as uuid } from 'uuid';
-import { add, format, set, startOfDay, startOfWeek } from "date-fns";
+import { factory, nullable, primaryKey } from "@mswjs/data"
+import { add, format, set, startOfWeek } from "date-fns"
+import { v4 as uuid } from 'uuid'
 
 export const db = factory({
   account: {

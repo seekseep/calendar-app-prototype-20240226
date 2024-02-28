@@ -8,21 +8,20 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Typography,
   Grid,
   Accordion,
   AccordionSummary,
   AccordionDetails
-} from "@mui/material";
+} from "@mui/material"
+import { format } from "date-fns"
+import { useForm } from "react-hook-form"
 
-import { Schedule } from "@/app/types";
-import { useForm } from "react-hook-form";
-import { format } from "date-fns";
-import { getScehduelStatusOrThrow } from "@/app/model/utilities";
-import { useMemo } from "react";
-import { FormValues, ScheduleTheme } from "./types";
-import { useScheduleThemes } from "./hooks";
-import ScheduleThemeButton from "./ScheduleThemeButton";
+import ScheduleThemeButton from "./ScheduleThemeButton"
+import { useScheduleThemes } from "./hooks"
+import { FormValues } from "./types"
+
+import { getScehduelStatusOrThrow } from "@/app/model/utilities"
+import { Schedule } from "@/app/types"
 
 const statusFieldHidden = true
 

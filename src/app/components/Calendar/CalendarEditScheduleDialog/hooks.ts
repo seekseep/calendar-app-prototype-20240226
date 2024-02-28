@@ -1,24 +1,26 @@
-import { useTheme } from "@mui/material"
 import { useMemo } from "react"
+
+import { useTheme } from "@mui/material"
+
 import { ScheduleTheme } from "./types"
 
 function convertToHex(color: string): string {
   if (color.startsWith('#') && color.length === 4) {
-    return '#' + color[1] + color[1] + color[2] + color[2] + color[3] + color[3];
+    return '#' + color[1] + color[1] + color[2] + color[2] + color[3] + color[3]
   }
 
   if (color.startsWith('rgb')) {
-    const rgb = color.match(/\d+/g)?.map(Number); // 数字の部分を抽出して配列に変換
+    const rgb = color.match(/\d+/g)?.map(Number) // 数字の部分を抽出して配列に変換
     if (rgb && rgb.length === 3) {
       return '#' + rgb.map((n) => {
-        const hex = n.toString(16);
-        return hex.length === 1 ? '0' + hex : hex; // 1桁の場合は0を足して2桁にする
-      }).join('');
+        const hex = n.toString(16)
+        return hex.length === 1 ? '0' + hex : hex // 1桁の場合は0を足して2桁にする
+      }).join('')
     }
   }
 
-  if (color.startsWith('#') && color.length === 7) return color;
-  throw new Error('Invalid color format');
+  if (color.startsWith('#') && color.length === 7) return color
+  throw new Error('Invalid color format')
 }
 
 export function useScheduleThemes () {

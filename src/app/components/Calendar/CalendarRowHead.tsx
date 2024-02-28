@@ -1,7 +1,9 @@
-import { PropsWithChildren } from "react";
-import { useCalendarTheme, useRowHeaderWidth } from "./theme/hooks";
-import { Box, Typography, useTheme } from "@mui/material";
-import { useCalendar } from "./hooks";
+import { PropsWithChildren } from "react"
+
+import { Box } from "@mui/material"
+
+import { useCalendar } from "./hooks"
+import { useCalendarTheme } from "./theme/hooks"
 
 export default function CalendarRowHead ({
   children,

@@ -1,8 +1,10 @@
 'use client'
 
-import { PropsWithChildren } from "react";
+import { PropsWithChildren } from "react"
+
 import { Box } from '@mui/material'
-import { useDeckWidth } from "./theme/hooks";
+
+import { useDeckWidth } from "./theme/hooks"
 
 export default function CalendarContainer ({
   children
