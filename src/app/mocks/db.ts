@@ -43,13 +43,20 @@ const baseDate = startOfWeek(new Date())
 for (let i = 0; i < 7; i++) {
   const date = add(baseDate, { days: i })
 
-  db.dailyNote.create({
-    type: 'TEAM',
-    resourceId: 'TEAM',
-    date: format(date, 'yyyy-MM-dd'),
-    tag: '',
-    body: '本日はAさんが体調不良のため休診となります。'
-  })
+  if (i < 4) {
+    db.dailyNote.create({
+      type: 'TEAM',
+      resourceId: 'TEAM',
+      date: format(date, 'yyyy-MM-dd'),
+      tag: '',
+      body: [
+        '本日はAさんが体調不良のため休診となります。',
+        'Bさんの予約がキャンセルとなりました。',
+        'Cさんの予約が追加されました。',
+        'とても長いメモの場合どのように表示されるのかを確認するための内容がこの部分です。とても長い場合に利用者がのように見えるのかを確認したいです。'
+      ][i % 4]
+    })
+  }
 
   for (let a = 0; a < accounts.length; a++) {
     const account = accounts[a]
@@ -67,7 +74,7 @@ for (let i = 0; i < 7; i++) {
         accountId: account.id,
         startedAt: startedAt.toISOString(),
         finishedAt: finishedAt.toISOString(),
-        label: `予約 ${i + 1}-${j + 1}-1`,
+        label: `中学国語`,
         color: '#333333',
         backgroundColor: '#EEEEEE',
         borderColor: '#CCCCCC',
@@ -79,26 +86,41 @@ for (let i = 0; i < 7; i++) {
         accountId: account.id,
         startedAt: add(startedAt, { hours: 2 + j * 2 }).toISOString(),
         finishedAt: add(finishedAt, { hours: 2 + j * 2 + 1 }).toISOString(),
-        label: `予約 ${i + 1}-${j + 1}-2`,
+        label: `夏期集中数学III`,
         color: '#333333',
         backgroundColor: '#EEEEEE',
         borderColor: '#CCCCCC',
         errorIcon: false,
-        status: 'ERROR',
+        status: 'NORMAL',
         row: 1,
       })
       db.schedule.create({
         accountId: account.id,
         startedAt: add(startedAt, { hours: 3 + j * 3 }).toISOString(),
         finishedAt: add(finishedAt, { hours: 3 + j * 3 + 1 }).toISOString(),
-        label: `予約 ${i + 1}-${j + 1}-3`,
+        label: `プログラミング体験`,
         color: '#333333',
         backgroundColor: '#EEEEEE',
         borderColor: '#CCCCCC',
         errorIcon: true,
-        status: 'ERROR',
+        status: 'NORMAL',
         row: 2,
       })
     }
   }
+}
+
+for (let i = 0; i < 20; i++) {
+  db.schedule.create({
+    accountId: accounts[0].id,
+    startedAt: add(new Date(), { hours: 3, minutes: 0 }).toISOString(),
+    finishedAt: add(new Date(), { hours: 4, minutes: 0 }).toISOString(),
+    label: `プログラミング体験`,
+    color: '#333333',
+    backgroundColor: '#EEEEEE',
+    borderColor: '#CCCCCC',
+    errorIcon: true,
+    status: 'CANCELED',
+    row: 2,
+  })
 }

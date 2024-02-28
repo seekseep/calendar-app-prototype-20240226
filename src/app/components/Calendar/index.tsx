@@ -24,10 +24,10 @@ export default function Calendar (props: ({
           <CalendarToolbar />
           <CalendarContent />
           <CalendarDeck />
-          <CalendarEditScheduleDialog />
-          <CalendarEditDailyNoteTagDialog />
-          <CalendarEditDailyNoteBodyDialog />
         </CalendarContainer>
+        <CalendarEditScheduleDialog />
+        <CalendarEditDailyNoteTagDialog />
+        <CalendarEditDailyNoteBodyDialog />
       </CalendarProvider>
     </CalendarThemeProvider>
   )

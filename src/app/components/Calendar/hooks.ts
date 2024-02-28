@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react"
 
 import { createRows } from "./services/calendarPack"
 import { useCalendarTheme, useDailyNoteWidth, useHourHeight, useHourWidth, useRowHeaderWidth, useScheduleRowHeight } from "./theme/hooks"
-import { CalendarContextValue, CalendarEvents, CalendarOptions, CalendarSettings, CalendarStatus } from "./types"
+import { CalendarContextValue, CalendarEvents, CalendarOptions, CalendarSettings, CalendarStatus, DailyNoteDraft } from "./types"
 
 import { Account, DailyNote, Schedule } from "@/app/types"
 
@@ -18,6 +18,7 @@ const defaultCalendarContextValue: CalendarContextValue = {
   status: 'loading',
   rows: [],
   tags: [],
+  cancledSchedules: [],
   rowsUpdatedAt: -1,
   scheduleToEdit: null,
   dailyNoteToEditTag: null,
@@ -32,6 +33,7 @@ const defaultCalendarContextValue: CalendarContextValue = {
   closeDailyNoteTag: () => undefined,
   openDailyNoteBody: () => undefined,
   closeDailyNoteBody: () => undefined,
+  createDailyNote: () => undefined,
   updateDailyNote: () => undefined,
 }
 
@@ -46,6 +48,7 @@ export function useCalendarValue ({
   onCreateSchedule,
   onUpdateSchedule,
   onDeleteSchedule,
+  onCreateDailyNote,
   onUpdateDailyNote
 }: {
   options?: Partial<CalendarContextValue>
@@ -56,8 +59,12 @@ export function useCalendarValue ({
   const [status, setStatus] = useState<CalendarStatus>('loading')
 
   const [scheduleToEdit, setScheduleToEdit] = useState<Schedule | null>(null)
-  const [dailyNoteToEditTag, setDailyNoteToEditTag] = useState<DailyNote | null>(null)
-  const [dailyNoteToEditBody, setDailyNoteToEditBody] = useState<DailyNote | null>(null)
+  const [dailyNoteToEditTag, setDailyNoteToEditTag] = useState<DailyNoteDraft | null>(null)
+  const [dailyNoteToEditBody, setDailyNoteToEditBody] = useState<DailyNoteDraft | null>(null)
+
+  const cancledSchedules = useMemo(() => {
+    return schedules?.filter(schedule => schedule.status === 'CANCELED') ?? []
+  }, [schedules])
 
   const tags = useMemo(() => {
     const tags: Record<string, boolean> = {}
@@ -112,6 +119,7 @@ export function useCalendarValue ({
     scheduleToEdit,
     dailyNoteToEditTag,
     dailyNoteToEditBody,
+    cancledSchedules,
     changeOptions: (updated: Partial<CalendarOptions>) => {
       if (!onChangeOptions) return
       onChangeOptions({
@@ -126,13 +134,13 @@ export function useCalendarValue ({
     openSchedule: (schedule: Schedule) => {
       setScheduleToEdit(schedule)
     },
-    openDailyNoteTag: (dailyNote: DailyNote) => {
+    openDailyNoteTag: (dailyNote: DailyNoteDraft) => {
       setDailyNoteToEditTag(dailyNote)
     },
     closeDailyNoteTag: () => {
       setDailyNoteToEditTag(null)
     },
-    openDailyNoteBody: (dailyNote: DailyNote) => {
+    openDailyNoteBody: (dailyNote: DailyNoteDraft) => {
       setDailyNoteToEditBody(dailyNote)
     },
     closeDailyNoteBody: () => {
@@ -141,8 +149,11 @@ export function useCalendarValue ({
     closeSchedule: () => {
       setScheduleToEdit(null)
     },
-    updateDailyNote: (dailyNote: DailyNote) => {
+    updateDailyNote: (dailyNote: DailyNoteDraft) => {
       onUpdateDailyNote && onUpdateDailyNote(dailyNote)
+    },
+    createDailyNote: (dailyNote: DailyNote) => {
+      onCreateDailyNote && onCreateDailyNote(dailyNote)
     },
     createSchedule: (schedule: Schedule) => {
       onCreateSchedule && onCreateSchedule(schedule)

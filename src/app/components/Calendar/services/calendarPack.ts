@@ -39,7 +39,10 @@ export function createRows (
       type: 'group',
       rowCount: 0,
       rows: [],
-      note: dailyNoteByDateAndReourceId[dateKey]?.['TEAM'] ?? undefined
+      note: dailyNoteByDateAndReourceId[dateKey]?.['TEAM'] ?? undefined,
+      keyValueSets: [
+        { key: 'date', value: dateKey },
+      ]
     }
 
     for (let account of accounts) {
@@ -48,7 +51,11 @@ export function createRows (
         type: 'schedule',
         rowCount: 0,
         rows: [],
-        note: dailyNoteByDateAndReourceId[dateKey]?.[account.id] ?? undefined
+        note: dailyNoteByDateAndReourceId[dateKey]?.[account.id] ?? undefined,
+        keyValueSets: [
+          { key: 'date', value: dateKey },
+          { key: 'accountId', value: account.id },
+        ]
       }
 
       const schedules = schedulesByDateAndAccountId[format(date, 'yyyy-MM-dd')]?.[account.id] ?? []

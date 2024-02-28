@@ -48,31 +48,41 @@ export default function CalendarContent () {
       changeSizeEventNames.forEach(eventName => window.removeEventListener(eventName, changeSize))
     }
   }, [])
+  const key = `${rowsUpdatedAt}_${size.width}x${size.height}`
 
   return (
-    <Box ref={containerRef} sx={{ gridArea: 'content' }} position="relative">
-      <VariableSizeList<CalendaRowPayload[]>
-        key={rowsUpdatedAt}
-        initialScrollOffset={scrollOffset}
-        onScroll={({ scrollOffset }) => setScrollOffset(scrollOffset)}
-        height={size.height}
-        width={size.width}
-        itemData={rows}
-        itemCount={rows.length}
-        innerRef={listInnerRef}
-        innerElementType={ListInner}
-        itemSize={index => rows[index].rowCount * scheduleRowHeight}>
-        {({ data, index, style }) => {
-          return (
-            <CaelndarRow key={index} row={data[index]} style={{
-              ...style,
-              ...(typeof style.top === 'number' ? ({
-                top: style.top + hourHeight
-              }) : ({}))
-            }} />
-          )
-        }}
-      </VariableSizeList>
+    <Box sx={{ gridArea: 'content' }} position="relative" overflow="hidden">
+      <Box
+        ref={containerRef} position="absolute"
+        top="0" left="0" width="100%" height="100%">
+        <VariableSizeList<CalendaRowPayload[]>
+          key={key}
+          initialScrollOffset={scrollOffset}
+          onScroll={({ scrollOffset }) => setScrollOffset(scrollOffset)}
+          height={size.height}
+          width={size.width}
+          itemData={rows}
+          itemCount={rows.length}
+          innerRef={listInnerRef}
+          innerElementType={ListInner}
+          itemSize={index => rows[index].rowCount * scheduleRowHeight}>
+          {({
+            data, index, style
+          }: {
+            data: CalendaRowPayload[]
+            index: number
+            style: Record<string, any>
+          }) => (
+            <CaelndarRow
+              key={index}
+              row={data[index]}
+              style={{
+                ...style,
+                top: (style.top as number) + hourHeight,
+              }} />
+          )}
+        </VariableSizeList>
+      </Box>
     </Box>
   )
 }

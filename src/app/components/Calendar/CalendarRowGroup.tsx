@@ -49,13 +49,32 @@ export default function CalendarGroupRow ({
           width={dailyNoteWidth}
           zIndex={zIndex.dailyNote}
           bgcolor="background.default">
-          <ButtonBase onClick={() => {
-            if (!row.note) return
-            openDailyNoteBody(row.note)
-          }}>
-            <Typography variant="body2" padding={1} textAlign="left">
-              {row.note?.body}
-            </Typography>
+          <ButtonBase
+            sx={{ flexGrow: 1 }}
+            onClick={() => {
+              const date = row.keyValueSets.find(set => set.key === 'date')?.value
+              if (!date) throw Error('date is not found')
+              const resourceId = "TEAM"
+              openDailyNoteBody({
+                id: row.note?.id,
+                tag: row.note?.tag ?? '',
+                body: row.note?.body ?? '',
+                date: row.note?.date ?? date,
+                resourceId: row.note?.resourceId ?? resourceId,
+                type: row.note?.type ?? 'TEAM'
+              })
+            }}>
+            <Box width="100%" height="100%">
+              {typeof row.note?.body == 'string' ? (
+                <Typography component="div" variant="body2" padding={1} textAlign="left">
+                  {row.note?.body}
+                </Typography>
+              ): (
+                <Typography component="div" variant="body2" padding={1} textAlign="left" fontStyle="italic">
+                  なし
+                </Typography>
+              )}
+            </Box>
           </ButtonBase>
         </Box>
       </Box>

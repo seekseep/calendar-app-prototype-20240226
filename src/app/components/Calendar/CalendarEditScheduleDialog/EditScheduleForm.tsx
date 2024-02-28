@@ -23,8 +23,6 @@ import { FormValues } from "./types"
 import { getScehduelStatusOrThrow } from "@/app/model/utilities"
 import { Schedule } from "@/app/types"
 
-const statusFieldHidden = true
-
 export default function EditScheduelForm ({
   schedule,
   onCancel,
@@ -116,20 +114,18 @@ export default function EditScheduelForm ({
           <Stack direction="column" gap={3}>
             <Stack direction="row" gap={2}>
               <TextField fullWidth label="表示名" {...methods.register('label')} />
-              {!statusFieldHidden && (
-                <FormControl fullWidth>
-                  <InputLabel id="status-select-label">状態</InputLabel>
-                  <Select
-                    id="status-select"
-                    labelId="status-select-label"
-                    value={methods.watch('status')}
-                    {...methods.register('status')}
-                    label="状態">
-                    <MenuItem value={"NORMAL"}>通常</MenuItem>
-                    <MenuItem value={"ERROR"}>エラー</MenuItem>
-                  </Select>
-                </FormControl>
-              )}
+              <FormControl fullWidth>
+                <InputLabel id="status-select-label">状態</InputLabel>
+                <Select
+                  id="status-select"
+                  labelId="status-select-label"
+                  value={methods.watch('status')}
+                  {...methods.register('status')}
+                  label="状態">
+                  <MenuItem value={"NORMAL"}>通常</MenuItem>
+                  <MenuItem value={"CANCELED"}>振替待ち</MenuItem>
+                </Select>
+              </FormControl>
             </Stack>
             <Stack direction="row" gap={2}>
               <TextField fullWidth label="日付" {...methods.register('startedDate')} type="date" />

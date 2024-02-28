@@ -3,7 +3,7 @@ export interface Account {
   name: string
 }
 
-export type ScheduleStatus = 'NORMAL' | 'ERROR'
+export type ScheduleStatus = 'NORMAL' | 'CANCELED'
 
 export interface Schedule {
   id: string

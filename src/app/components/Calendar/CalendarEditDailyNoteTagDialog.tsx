@@ -1,18 +1,18 @@
 import { Box, Button, Dialog, DialogActions, DialogTitle, TextField } from "@mui/material"
 import { useForm } from "react-hook-form"
+import { v4 as uuid } from "uuid"
 
 import { useCalendar } from "./hooks"
-
-import { DailyNote } from "@/app/types"
+import { DailyNoteDraft } from "./types"
 
 function CalendarEditDailyNoteTagForm ({
   dailyNote,
   onClose,
   onSubmit
 }: {
-  dailyNote: DailyNote
+  dailyNote: DailyNoteDraft
   onClose: () => void
-  onSubmit: (dailyNote: DailyNote) => void
+  onSubmit: (dailyNote: DailyNoteDraft) => void
 }) {
   const methods = useForm<{ tag: string }>({
     defaultValues: {
@@ -43,7 +43,7 @@ function CalendarEditDailyNoteTagForm ({
 }
 
 export default function CalendarEditDailyNoteTagDialog () {
-  const { dailyNoteToEditTag, closeDailyNoteTag, updateDailyNote } = useCalendar()
+  const { dailyNoteToEditTag, closeDailyNoteTag, updateDailyNote, createDailyNote } = useCalendar()
 
   return (
     <Dialog
@@ -56,7 +56,18 @@ export default function CalendarEditDailyNoteTagDialog () {
           dailyNote={dailyNoteToEditTag}
           onClose={closeDailyNoteTag}
           onSubmit={(dailyNote) => {
-            updateDailyNote(dailyNote)
+            if (dailyNote.id) {
+              updateDailyNote({
+                id: dailyNote.id,
+                ...dailyNote
+              })
+            } else {
+              createDailyNote({
+                id: uuid(),
+                ...dailyNote
+              })
+            }
+
             closeDailyNoteTag()
           }} />
       )}

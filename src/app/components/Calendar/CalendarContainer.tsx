@@ -13,11 +13,13 @@ export default function CalendarContainer ({
   return (
     <Box
       display="grid"
+      position="absolute"
+      top="0" left="0"
       width="100%" height="100%"
       sx={{
         gridTemplateRows: 'auto 1fr',
         gridTemplateColumns: `1fr ${deckWidth}px`,
-        gridTemplateAreas: `"toolbar deck" "content deck"`
+        gridTemplateAreas: `"toolbar toolbar" "content deck"`
       }}>
       {children}
     </Box>

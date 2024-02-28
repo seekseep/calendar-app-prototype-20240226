@@ -7,7 +7,7 @@ export function getStringOrThrow (value: any) {
 
 export function getScehduelStatusOrThrow (status: any): ScheduleStatus {
   if (status === "NORMAL") return "NORMAL"
-  if (status === "ERROR") return "ERROR"
+  if (status === "CANCELED") return "CANCELED"
   throw new Error("Invalid status")
 }
 

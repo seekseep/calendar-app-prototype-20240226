@@ -2,6 +2,7 @@ import { CSSProperties, useState, MouseEvent } from "react"
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import { Box, Stack, Chip, Typography, Menu, MenuItem, Divider } from "@mui/material"
+import { v4 as uuid } from "uuid"
 
 import CalendarRowHead from "./CalendarRowHead"
 import CalendarScheduleRow from "./CalendarScheduleRow"
@@ -19,7 +20,7 @@ export default function CalendarScheduleRowGroup ({
   row: CalendarScheduleRowGroupPayload
   style?: CSSProperties
 }) {
-  const { startHour, endHour, hourSectionCount, tags, updateDailyNote, openDailyNoteTag } = useCalendar()
+  const { startHour, endHour, hourSectionCount, tags, updateDailyNote, openDailyNoteTag, createDailyNote } = useCalendar()
   const { scheduleRowHeight, hourWidth } = useCalendarTheme()
   const height = row.rowCount * scheduleRowHeight
   const rowWidth = useCalendarRowWidth(depth)
@@ -64,35 +65,57 @@ export default function CalendarScheduleRowGroup ({
           ))}
         </Box>
       </Box>
-      {row.note && (
-        <Menu
-          open={open} onClose={handleClose}
-          anchorEl={anchorEl}>
-          {tags.map((tag) => (
-            <MenuItem
-              key={tag}
-              onClick={() => {
-                if(!row.note) return
+      <Menu
+        open={open} onClose={handleClose}
+        anchorEl={anchorEl}>
+        {tags.map((tag) => (
+          <MenuItem
+            key={tag}
+            onClick={() => {
+              if (row.note) {
                 updateDailyNote({
                   ...row.note,
                   tag
                 })
-                handleClose()
-              }}>
-              {tag}
-            </MenuItem>
-          ))}
-          <Divider />
-          <MenuItem
-            onClick={() => {
-              if(!row.note) return
-              openDailyNoteTag(row.note)
+              } else {
+                const date = row.keyValueSets.find(set => set.key === 'date')?.value
+                if (!date) throw Error('date is not found')
+                const resourceId = row.keyValueSets.find(set => set.key === 'accountId')?.value
+                if (!resourceId) throw Error('resourceId is not found')
+                createDailyNote({
+                  id: uuid(),
+                  tag: tag,
+                  body: '',
+                  date: date,
+                  resourceId: resourceId,
+                  type: 'ACCOUNT'
+                })
+              }
               handleClose()
             }}>
-            新しく作る
+            {tag}
           </MenuItem>
-        </Menu>
-      )}
+        ))}
+        <Divider />
+        <MenuItem
+          onClick={() => {
+            const date = row.keyValueSets.find(set => set.key === 'date')?.value
+            if (!date) throw Error('date is not found')
+            const resourceId = row.keyValueSets.find(set => set.key === 'accountId')?.value
+            if (!resourceId) throw Error('resourceId is not found')
+            openDailyNoteTag({
+              id: row.note?.id,
+              tag: row.note?.tag ?? '',
+              body: row.note?.body ?? '',
+              date: row.note?.date ?? date,
+              resourceId: row.note?.resourceId ?? resourceId,
+              type: row.note?.type ?? 'ACCOUNT'
+            })
+            handleClose()
+          }}>
+          新しく作る
+        </MenuItem>
+      </Menu>
     </div>
   )
 }

@@ -5,7 +5,7 @@ import { PropsWithChildren } from "react"
 import { Star } from '@mui/icons-material'
 import { AppBar, Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from "@mui/material"
 
-const drawerWidth = 240
+const drawerWidth = 200
 
 export default function Layout ({
   children
@@ -51,13 +51,8 @@ export default function Layout ({
               ))}
             </List>
         </Box>
-        <Box height="100%" flexGrow={1} position="relative">
-          <Box
-            position="absolute"
-            top={0} left={0} right={0} bottom={0}
-            overflow="auto">
-            {children}
-          </Box>
+        <Box minHeight="100%" flexGrow={1} position="relative">
+          {children}
         </Box>
       </Box>
     </Box>
