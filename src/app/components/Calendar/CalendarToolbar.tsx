@@ -6,7 +6,15 @@ import { useCalendar } from "./hooks"
 import { CalendarSettings } from "./types"
 
 export default function CalendarToolbar () {
-  const { startDate, endDate, changeOptions, status, selectedSchedules, clearSelectedSchedules,openSchedules } = useCalendar()
+  const {
+    status,
+    selectedSchedules,
+    startDate,
+    endDate,
+    changeOptions,
+    clearSelectedSchedules,
+    openSchedules
+  } = useCalendar()
 
   const changeDateOptions = (
     nextOptions: Partial<CalendarSettings>,

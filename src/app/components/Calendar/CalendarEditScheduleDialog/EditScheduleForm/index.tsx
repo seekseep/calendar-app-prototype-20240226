@@ -8,7 +8,6 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Grid,
   Accordion,
   AccordionSummary,
   AccordionDetails
@@ -16,8 +15,6 @@ import {
 import { format } from "date-fns"
 import { useForm } from "react-hook-form"
 
-import ScheduleThemeButton from "./ScheduleThemeButton"
-import { useScheduleThemes } from "./hooks"
 import { FormValues } from "./types"
 
 import { getScehduelStatusOrThrow } from "@/app/model/utilities"
@@ -39,15 +36,11 @@ export default function EditScheduelForm ({
       startedTime: schedule.startedAt ? format(schedule.startedAt, 'HH:mm') : '',
       finishedTime: schedule.finishedAt ? format(schedule.finishedAt, 'HH:mm') : '',
       color: schedule.color ?? '',
-      borderColor: schedule.borderColor ?? '',
-      backgroundColor: schedule.backgroundColor ?? '',
-      errorIcon: schedule.errorIcon ? 1 : 0,
+      hasProblems: schedule.hasProblems ? '1' : '0',
       row: typeof schedule.row == 'number' ? schedule.row.toString() : '0',
       status: schedule.status ?? "NORMAL"
     }
   })
-
-  const scheduleThemes = useScheduleThemes()
 
   return (
     <Box
@@ -59,9 +52,7 @@ export default function EditScheduelForm ({
           startedAt: new Date(`${values.startedDate} ${values.startedTime}`).toISOString(),
           finishedAt: new Date(`${values.startedDate} ${values.finishedTime}`).toISOString(),
           color: values.color,
-          borderColor: values.borderColor,
-          backgroundColor: values.backgroundColor,
-          errorIcon: values.errorIcon === 1 ? true : false,
+          hasProblems: values.hasProblems == '1' ? true : false,
           row: +values.row,
           status: getScehduelStatusOrThrow(schedule.status),
         })
@@ -73,35 +64,19 @@ export default function EditScheduelForm ({
         <AccordionDetails>
           <Stack direction="row" gap={2} mb={2}>
             <TextField fullWidth label="色" value={methods.watch('color')} {...methods.register('color')} type="color" />
-            <TextField fullWidth label="枠色" value={methods.watch('borderColor')} {...methods.register('borderColor')} type="color" />
-            <TextField fullWidth label="背景色" value={methods.watch('backgroundColor')} {...methods.register('backgroundColor')} type="color" />
             <FormControl fullWidth>
-                <InputLabel id="status-select-label">エラーアイコン</InputLabel>
-                <Select
-                  id="status-select"
-                  labelId="status-select-label"
-                  value={methods.watch('errorIcon')}
-                  {...methods.register('errorIcon')}
-                  label="エラーアイコン">
-                  <MenuItem value={1}>あり</MenuItem>
-                  <MenuItem value={0}>なし</MenuItem>
-                </Select>
-              </FormControl>
+              <InputLabel id="status-select-label">問題の有無</InputLabel>
+              <Select
+                id="status-select"
+                labelId="status-select-label"
+                value={methods.watch('hasProblems')}
+                {...methods.register('hasProblems')}
+                label="問題">
+                <MenuItem value="1">あり</MenuItem>
+                <MenuItem value="0">なし</MenuItem>
+              </Select>
+            </FormControl>
           </Stack>
-          <Grid container spacing={2}>
-            {scheduleThemes.map((theme, index) => (
-              <Grid key={index} item xs={2}>
-                <ScheduleThemeButton
-                  value={theme}
-                  onClick={(theme) => {
-                    methods.setValue('color', theme.color)
-                    methods.setValue('borderColor', theme.borderColor)
-                    methods.setValue('backgroundColor', theme.backgroundColor)
-                    methods.setValue('errorIcon', theme.errorIcon ? 1 : 0)
-                  }} />
-              </Grid>
-            ))}
-          </Grid>
         </AccordionDetails>
       </Accordion>
       <Accordion variant="outlined">

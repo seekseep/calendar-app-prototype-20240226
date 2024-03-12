@@ -4,16 +4,7 @@ export type FormValues = {
   startedTime: string
   finishedTime: string
   color: string
-  borderColor: string
-  backgroundColor: string
-  errorIcon: number
+  hasProblems: string
   row: string
   status: string
-}
-
-export type ScheduleTheme = {
-  color: string
-  borderColor: string
-  backgroundColor: string
-  errorIcon: boolean
 }

@@ -12,11 +12,11 @@ export interface Schedule {
   finishedAt: string
   label: string
   color: string
-  backgroundColor: string
-  borderColor: string
-  errorIcon: boolean
   status: ScheduleStatus
+  hasProblems: boolean
   row: number
+  subject: string
+  format: string
 }
 
 export interface TeamDailyNote {
