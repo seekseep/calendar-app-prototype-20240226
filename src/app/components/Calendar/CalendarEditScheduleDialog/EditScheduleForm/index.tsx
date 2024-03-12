@@ -42,7 +42,7 @@ export default function EditScheduelForm ({
       borderColor: schedule.borderColor ?? '',
       backgroundColor: schedule.backgroundColor ?? '',
       errorIcon: schedule.errorIcon ? 1 : 0,
-      row: schedule.row ?? 0,
+      row: typeof schedule.row == 'number' ? schedule.row.toString() : '0',
       status: schedule.status ?? "NORMAL"
     }
   })
