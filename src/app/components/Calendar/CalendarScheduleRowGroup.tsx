@@ -44,7 +44,7 @@ export default function CalendarScheduleRowGroup ({
               size="small"
               sx={{ position: 'relative'}}
               onClick={handleClick}
-              label={row.note?.tag ?? 'なし'}
+              label={row.note?.tag ?? ''}
               deleteIcon={<ArrowDropDownIcon />} />
             <Typography variant="caption">
               {row.name}
@@ -97,6 +97,31 @@ export default function CalendarScheduleRowGroup ({
           </MenuItem>
         ))}
         <Divider />
+        <MenuItem
+          onClick={() => {
+            if (row.note) {
+              updateDailyNote({
+                ...row.note,
+                tag: ''
+              })
+            } else {
+              const date = row.keyValueSets.find(set => set.key === 'date')?.value
+              if (!date) throw Error('date is not found')
+              const resourceId = row.keyValueSets.find(set => set.key === 'accountId')?.value
+              if (!resourceId) throw Error('resourceId is not found')
+              createDailyNote({
+                id: uuid(),
+                tag: '',
+                body: '',
+                date: date,
+                resourceId: resourceId,
+                type: 'ACCOUNT'
+              })
+            }
+            handleClose()
+          }}>
+          削除する
+        </MenuItem>
         <MenuItem
           onClick={() => {
             const date = row.keyValueSets.find(set => set.key === 'date')?.value

@@ -29,7 +29,6 @@ export default function CalendarDeck () {
             <CalendarSchedule
               key={schedule.id}
               schedule={schedule}
-              onClick={() => openSchedule(schedule)}
               sx={{
                 height: scheduleHeight
               }} />

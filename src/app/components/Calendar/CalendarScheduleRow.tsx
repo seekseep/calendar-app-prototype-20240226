@@ -25,28 +25,19 @@ export default function CalendarScheduleRow ({
         const sStartHour = sStartedAt.getHours() + sStartedAt.getMinutes() / 60
         const sEndHour = sFinishedAt.getHours() + sFinishedAt.getMinutes() / 60
         const x = (sStartHour - startHour) * hourWidth
-        const width = (sEndHour - sStartHour) * hourWidth
+        const width = (sEndHour - sStartHour) * hourWidth - 1
         const y = (scheduleRowHeight - scheduleHeight) / 2
-        const selected = selectedSchedules.findIndex(s => s.id === schedule.id) !== -1
+
         return (
           <CalendarSchedule
             key={index}
-            onEdit={() => openSchedule(schedule)}
-            onClick={() => {
-              toggleSelectedSchedule(schedule)
-            }}
             schedule={schedule}
             sx={{
               position: 'absolute',
               left: x,
               top: y,
               width,
-              height: scheduleHeight,
-              ...(selected ? ({
-                outlineStyle: 'solid',
-                outlineWidth: 2,
-                outlineColor: 'primary.main',
-              }) : undefined)
+              height: scheduleHeight
             }} />
         )
       })}

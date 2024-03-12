@@ -9,11 +9,11 @@ export function createSchedule(data: any): Schedule {
     startedAt: getStringOrThrow(data?.startedAt),
     finishedAt: getStringOrThrow(data?.finishedAt),
     label: getStringOrThrow(data?.label),
-    backgroundColor: getStringOrThrow(data?.backgroundColor),
     color: getStringOrThrow(data?.color),
-    borderColor: getStringOrThrow(data?.borderColor),
-    errorIcon: (!!data?.errorIcon),
     status: getScehduelStatusOrThrow(data?.status),
     row: getNumberOrThrow(data?.row),
+    hasProblems: data?.hasProblems ? true : false,
+    subject: getStringOrThrow(data?.subject),
+    format: getStringOrThrow(data?.format),
   }
 }
