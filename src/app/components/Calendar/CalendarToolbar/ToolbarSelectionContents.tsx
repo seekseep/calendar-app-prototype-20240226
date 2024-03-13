@@ -46,11 +46,11 @@ export default function ToolbarSelectionContents () {
         <Menu
           sx={{ width: 200 }}
           open={!!editMenuAnchorEle} anchorEl={editMenuAnchorEle} onClose={() => setEditMenuAnchorEle(null)}>
-          <MenuItem dense>日付</MenuItem>
-          <MenuItem dense>科目</MenuItem>
-          <MenuItem dense>生徒</MenuItem>
-          <MenuItem dense>講師</MenuItem>
-          <MenuItem dense>詳細</MenuItem>
+          <MenuItem dense onClick={() => startToEditSchedules(selectedSchedules, 'BASIC')}>基本</MenuItem>
+          <MenuItem dense onClick={() => startToEditSchedules(selectedSchedules, 'DATE')}>日付</MenuItem>
+          <MenuItem dense onClick={() => startToEditSchedules(selectedSchedules, 'SUBJECT')}>科目</MenuItem>
+          <MenuItem dense onClick={() => startToEditSchedules(selectedSchedules, 'STUDENTS')}>生徒</MenuItem>
+          <MenuItem dense onClick={() => startToEditSchedules(selectedSchedules, 'TEACHERS')}>講師</MenuItem>
         </Menu>
         <Tooltip title="色を変える">
           <IconButton onClick={(event) => setColorMenuAnchorEle(event.currentTarget)}>

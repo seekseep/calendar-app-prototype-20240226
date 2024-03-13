@@ -23,6 +23,8 @@ export default function CalendarEditScheduleDialog () {
       <DialogTitle>編集</DialogTitle>
       {scheduleToEdit && (
         <EditScheduelForm
+          id={scheduleToEdit.id}
+          type="ALL"
           accounts={accounts}
           defaultValues={defaultValues}
           onCancel={finishToEditSchedule}

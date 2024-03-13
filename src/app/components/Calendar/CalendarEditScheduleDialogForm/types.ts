@@ -1,3 +1,5 @@
+import { UpdateScheduleInput } from "../types"
+
 export type FormValues = {
   label: string
   format: string
@@ -13,3 +15,7 @@ export type FormValues = {
   students: { label: string, value: string }[]
   teachers: { label: string, value: string }[]
 }
+
+export type FormResult = UpdateScheduleInput
+
+export type EditScheduleType = 'ALL' | 'BASIC' | 'SUBJECT' | 'DATE' | 'TEACHERS' | 'STUDENTS' | 'OTHERS'

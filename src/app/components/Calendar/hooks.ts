@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react"
 
+import { EditScheduleType } from "./CalendarEditScheduleDialogForm/types"
 import { createRows } from "./services/calendarPack"
 import { useCalendarTheme, useDailyNoteWidth, useHourHeight, useHourWidth, useRowHeaderWidth, useScheduleRowHeight } from "./theme/hooks"
 import { CalendarContextValue, CalendarEvents, CalendarHelpers, CalendarOptions, CalendarSettings, CalendarStatus, UpdateDailyNoteInput, UpdateScheduleInput } from "./types"
@@ -86,7 +87,7 @@ export function useCalendarValue ({
   const [tagMenu, setTagMenu] = useState<{ dailyNote: DailyNote, anchorEle: HTMLElement } | null>(null)
   const [scheduleToEdit, setScheduleToEdit] = useState<Schedule | null>(null)
   const [scheduleToDelete, setScheduleToDelete] = useState<Schedule | null>(null)
-  const [schedulesToEdit, setSchedulesToEdit] = useState<Schedule[] | null>(null)
+  const [schedulesToEdit, setSchedulesToEdit] = useState<[Schedule[], EditScheduleType] | null>(null)
   const [schedulesToDelete, setSchedulesToDelete] = useState<Schedule[] | null>(null)
   const [selectedSchedules, setSelectedSchedules] = useState<Schedule[]>([])
   const [dailyNoteToEditTag, setDailyNoteToEditTag] = useState<Partial<Pick<DailyNote, 'id'>> & Omit<DailyNote, 'id'> | null>(null)
@@ -216,8 +217,8 @@ export function useCalendarValue ({
     finishToEditDailyNoteTag () {
       setDailyNoteToEditTag(null)
     },
-    startToEditSchedules (schedules) {
-      setSchedulesToEdit(schedules)
+    startToEditSchedules (schedules, type) {
+      setSchedulesToEdit([schedules, type])
     },
     finishToEditSchedules () {
       setSchedulesToEdit(null)

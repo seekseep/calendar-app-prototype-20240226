@@ -15,17 +15,21 @@ import {
 } from "@mui/material"
 import { Controller, useForm } from "react-hook-form"
 
-import { FormValues } from "./types"
+import { EditScheduleType, FormValues } from "./types"
+import { createFormResult } from "./utilities"
 
-import { getScehduelStatusOrThrow } from "@/app/model/utilities"
 import { Account, Schedule } from "@/app/types"
 
 export default function CalendarEditScheduleDialogForm ({
+  id,
+  type,
   accounts,
   defaultValues,
   onCancel,
   onSubmit
 }: {
+  id: string
+  type: EditScheduleType
   accounts: Account[]
   defaultValues: Partial<FormValues>
   onCancel: () => any
@@ -48,46 +52,52 @@ export default function CalendarEditScheduleDialogForm ({
     defaultValues,
   })
 
-  console.log(methods.getValues())
+  const isAll = type === 'ALL'
 
   return (
     <Box
       component="form"
-      onSubmit={methods.handleSubmit(values => {
-        onSubmit({
-          label: values.label,
-          subject: values.subject,
-          format: values.format,
-          startedAt: new Date(`${values.startedDate} ${values.startedTime}`).toISOString(),
-          finishedAt: new Date(`${values.startedDate} ${values.finishedTime}`).toISOString(),
-          teacherIds: values.teachers.map((teacher: any) => teacher.value),
-          studentIds: values.students.map((student: any) => student.value),
-          hasProblems: values.hasProblems == '1' ? true : false,
-          row: +values.row,
-          status: getScehduelStatusOrThrow(values.status),
-        })
-      })}>
+      onSubmit={methods.handleSubmit(values => onSubmit(createFormResult(values, type, id)))}>
       <DialogContent>
         <Stack direction="column" gap={3}>
-          <TextField fullWidth label="表示名" {...methods.register('label')} />
-          <Stack direction="row" gap={2}>
+          {(isAll || type === 'BASIC') && (
+            <>
+              <TextField fullWidth label="表示名" {...methods.register('label')} />
+              <TextField fullWidth label="形式" {...methods.register('format')} />
+              <FormControl fullWidth>
+                <InputLabel id="status-select-label">状態</InputLabel>
+                <Select
+                  id="status-select"
+                  labelId="status-select-label"
+                  value={methods.watch('status')}
+                  {...methods.register('status')}
+                  label="状態">
+                  <MenuItem value={"NORMAL"}>通常</MenuItem>
+                  <MenuItem value={"CANCELED"}>振替待ち</MenuItem>
+                </Select>
+              </FormControl>
+            </>
+          )}
+          {(isAll || type === 'SUBJECT') && (
             <TextField fullWidth label="科目" {...methods.register('subject')} />
-            <TextField fullWidth label="形式" {...methods.register('format')} />
-          </Stack>
-          <Controller
-            control={methods.control} name="teachers"
-            render={({ field: { value, onChange } }) => {
-              return (
-                <Autocomplete
-                  options={teacherOptions} multiple
-                  renderInput={(params) => <TextField {...params} label="講師" />}
-                  onChange={(event, values, reason) => onChange(values)}
-                  value={value}
-                />
-              )
-            }}>
-          </Controller>
-          <Controller
+          )}
+          {(isAll || type === 'TEACHERS') && (
+            <Controller
+              control={methods.control} name="teachers"
+              render={({ field: { value, onChange } }) => {
+                return (
+                  <Autocomplete
+                    options={teacherOptions} multiple
+                    renderInput={(params) => <TextField {...params} label="講師" />}
+                    onChange={(event, values, reason) => onChange(values)}
+                    value={value}
+                  />
+                )
+              }}>
+            </Controller>
+          )}
+          {(isAll || type === 'STUDENTS') && (
+            <Controller
             control={methods.control} name="students"
             render={({ field: { value, onChange } }) => {
               return (
@@ -99,26 +109,21 @@ export default function CalendarEditScheduleDialogForm ({
                 />
               )
             }}>
-          </Controller>
-          <Stack direction="row" gap={2}>
-            <TextField fullWidth label="日付" {...methods.register('startedDate')} type="date" />
-            <TextField fullWidth label="開始" {...methods.register('startedTime')} type="time" />
-            <TextField fullWidth label="終了" {...methods.register('finishedTime')} type="time" />
-          </Stack>
-          <FormControl fullWidth>
-            <InputLabel id="status-select-label">状態</InputLabel>
-            <Select
-              id="status-select"
-              labelId="status-select-label"
-              value={methods.watch('status')}
-              {...methods.register('status')}
-              label="状態">
-              <MenuItem value={"NORMAL"}>通常</MenuItem>
-              <MenuItem value={"CANCELED"}>振替待ち</MenuItem>
-            </Select>
-          </FormControl>
-          <TextField fullWidth label="行" {...methods.register('row')} type="number" />
-          <TextField fullWidth multiline label="備考" {...methods.register('note')} />
+            </Controller>
+          )}
+          {(isAll || type === 'DATE') && (
+            <Stack direction="row" gap={2}>
+              <TextField fullWidth label="日付" {...methods.register('startedDate')} type="date" />
+              <TextField fullWidth label="開始" {...methods.register('startedTime')} type="time" />
+              <TextField fullWidth label="終了" {...methods.register('finishedTime')} type="time" />
+            </Stack>
+          )}
+          {(isAll || type === 'BASIC') && (
+            <>
+              <TextField fullWidth label="行" {...methods.register('row')} type="number" />
+              <TextField fullWidth multiline label="備考" {...methods.register('note')} />
+            </>
+          )}
         </Stack>
       </DialogContent>
       <DialogActions>

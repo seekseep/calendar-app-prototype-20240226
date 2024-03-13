@@ -1,3 +1,5 @@
+import { EditScheduleType } from "./CalendarEditScheduleDialogForm/types"
+
 import { Account, DailyNote, Schedule } from "@/app/types"
 
 export interface CalendarSettings {
@@ -43,7 +45,7 @@ export type CalendarState = (
     // NOTE: UI
     selectedSchedules: Schedule[]
     scheduleToEdit: Schedule | null
-    schedulesToEdit: Schedule[] | null
+    schedulesToEdit: [Schedule[], EditScheduleType] | null
     scheduleToDelete: Schedule | null
     schedulesToDelete: Schedule[] | null
     dailyNoteToEditTag: Partial<Pick<DailyNote, 'id'>> & Omit<DailyNote, 'id'> | null
@@ -67,7 +69,7 @@ export type CalendarHelpers = {
   closeTagMenu: () => any
   startToEditSchedule: (schedules: Schedule) => any
   finishToEditSchedule: () => any
-  startToEditSchedules: (schedules: Schedule[]) => any
+  startToEditSchedules: (schedules: Schedule[], type: EditScheduleType) => any
   finishToEditSchedules: () => any
   startToDeleteSchedule: (schedules: Schedule) => any
   finishToDeleteSchedule: () => any
