@@ -1,5 +1,9 @@
-import { ChevronLeft, ChevronRight } from '@mui/icons-material'
-import { Button, Stack, TextField, Toolbar, IconButton, Typography, CircularProgress } from "@mui/material"
+import AddIcon from '@mui/icons-material/Add'
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
+import ChevronRightIcon from '@mui/icons-material/ChevronRight'
+import ContentCopyIcon from '@mui/icons-material/ContentCopy'
+import SettingsIcon from '@mui/icons-material/Settings'
+import { Button, Stack, TextField, Toolbar, IconButton, Typography, CircularProgress, Box } from "@mui/material"
 import { add, format, sub } from "date-fns"
 
 import { useCalendar } from "./hooks"
@@ -48,13 +52,15 @@ export default function CalendarToolbar () {
     <Toolbar
       variant="dense"
       sx={{
+        gap: 3,
+        alignItems: 'center',
         gridArea: 'toolbar',
         borderBottomWidth: 0.5,
         borderBottomColor: 'divider',
         borderBottomStyle: 'solid'
       }}>
       {selectedSchedulesCount < 1 ? (
-        <Stack direction="row" gap={3} alignItems="center">
+        <>
           <Button variant="outlined">今日</Button>
           <Stack direction="row" gap={1}>
             <IconButton onClick={() => {
@@ -64,7 +70,7 @@ export default function CalendarToolbar () {
                 endDate: format(sub(new Date(endDate), { days: currentDaysDiff }), 'yyyy-MM-dd')
               })
             }}>
-              <ChevronLeft />
+              <ChevronLeftIcon />
             </IconButton>
             <Stack direction="row" gap={1} alignItems="center">
               <TextField size="small" type="date" value={startDate} onChange={event => changeDateOptions({ startDate: event.target.value })} />
@@ -78,11 +84,24 @@ export default function CalendarToolbar () {
                 endDate: format(add(new Date(endDate), { days: currentDaysDiff }), 'yyyy-MM-dd')
               })
             }}>
-              <ChevronRight />
+              <ChevronRightIcon />
             </IconButton>
           </Stack>
-          {status == 'loading' && <CircularProgress size={20} />}
-        </Stack>
+          <Box flexGrow={1}>
+            {status == 'loading' && <CircularProgress size={20} />}
+          </Box>
+          <Stack direction="row">
+            <IconButton>
+              <ContentCopyIcon />
+            </IconButton>
+            <IconButton>
+              <AddIcon />
+            </IconButton>
+            <IconButton>
+              <SettingsIcon />
+            </IconButton>
+          </Stack>
+        </>
       ) : (
         <Stack direction="row" gap={2} alignItems="center">
           <Typography>{selectedSchedulesCount} 件選択中</Typography>
