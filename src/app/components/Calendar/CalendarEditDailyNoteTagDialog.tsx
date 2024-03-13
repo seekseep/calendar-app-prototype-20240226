@@ -44,18 +44,23 @@ function CalendarEditDailyNoteTagForm ({
 }
 
 export default function CalendarEditDailyNoteTagDialog () {
-  const { dailyNoteToEditTag, closeDailyNoteTag, updateDailyNote, createDailyNote } = useCalendar()
+  const {
+    dailyNoteToEditTag,
+    updateDailyNote,
+    createDailyNote,
+    finishToEditDailyNoteTag
+  } = useCalendar()
 
   return (
     <Dialog
       maxWidth="xs" fullWidth
       open={!!dailyNoteToEditTag}
-      onClose={closeDailyNoteTag}>
+      onClose={finishToEditDailyNoteTag}>
       <DialogTitle>タグの追加</DialogTitle>
       {dailyNoteToEditTag && (
         <CalendarEditDailyNoteTagForm
           dailyNote={dailyNoteToEditTag}
-          onClose={closeDailyNoteTag}
+          onClose={finishToEditDailyNoteTag}
           onSubmit={(dailyNote) => {
             if (dailyNote.id) {
               updateDailyNote({
@@ -68,8 +73,7 @@ export default function CalendarEditDailyNoteTagDialog () {
                 ...dailyNote
               })
             }
-
-            closeDailyNoteTag()
+            finishToEditDailyNoteTag()
           }} />
       )}
     </Dialog>

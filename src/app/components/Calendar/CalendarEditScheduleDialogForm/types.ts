@@ -1,5 +1,7 @@
 export type FormValues = {
   label: string
+  format: string
+  subject: string
   startedDate: string
   startedTime: string
   finishedTime: string
@@ -7,4 +9,7 @@ export type FormValues = {
   hasProblems: string
   row: string
   status: string
+  note: string
+  students: { label: string, value: string }[]
+  teachers: { label: string, value: string }[]
 }

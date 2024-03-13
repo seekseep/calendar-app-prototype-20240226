@@ -1,13 +1,17 @@
+export type AccountType = 'TEACHER' | 'STUDENT'
+
 export interface Account {
   id: string
   name: string
+  type: AccountType
 }
 
 export type ScheduleStatus = 'NORMAL' | 'CANCELED'
 
 export interface Schedule {
   id: string
-  accountId: string
+  studentIds: string[]
+  teacherIds: string[]
   startedAt: string
   finishedAt: string
   label: string
@@ -17,6 +21,8 @@ export interface Schedule {
   row: number
   subject: string
   format: string
+  note: string
+  createId: string
 }
 
 export interface TeamDailyNote {

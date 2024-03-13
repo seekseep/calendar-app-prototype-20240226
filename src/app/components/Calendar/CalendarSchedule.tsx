@@ -94,11 +94,6 @@ export default function CalendarSchedule ({
         sx={{
           position: 'relative',
           borderRadius: 1,
-          paddingX: 0.5,
-          gap: 0.5,
-          display: "flex",
-          alignItems: "center",
-          cursor: "pointer",
           color: color,
           border: `1px solid ${borderColor}`,
           backgroundColor: backgroundColor,
@@ -107,10 +102,21 @@ export default function CalendarSchedule ({
           },
           ...props.sx,
         }}>
-        {schedule.hasProblems && <ErrorOutlineIcon fontSize="small" />}
-        <Typography variant="caption" padding="0" lineHeight="1" flexGrow={1}>
-          {schedule.label}
-        </Typography>
+        <Box
+          sx={{
+            width: '100%',
+            height: '100%',
+            display: "flex",
+            alignItems: "center",
+            cursor: someSelected ? "pointer" : "pointer",
+            gap: 0.5,
+            paddingX: 0.5,
+          }}>
+          {schedule.hasProblems && <ErrorOutlineIcon fontSize="small" />}
+          <Typography variant="caption" padding="0" lineHeight="1" flexGrow={1}>
+            {schedule.label}
+          </Typography>
+        </Box>
         <Box
           className="calendar-schedule-checkbox-container"
           onClick={(event) => {
@@ -119,7 +125,7 @@ export default function CalendarSchedule ({
           }}
           position="absolute" display="flex" alignItems="center" justifyContent="center"
           sx={{
-            pointer: 'cursor',
+            cursor: "pointer",
             top: 0, right: 0, bottom: 0,
             ...(someSelected ? ({
               opacity: 0.8

@@ -1,30 +1,37 @@
+import { useMemo } from "react"
+
 import {
   Dialog,
   DialogTitle,
 } from "@mui/material"
 
+import EditScheduelForm from "../CalendarEditScheduleDialogForm"
+import { createFormValueFromSchedule } from "../CalendarEditScheduleDialogForm/utilities"
 import { useCalendar } from "../hooks"
 
-import EditScheduelForm from "./EditScheduleForm"
-
 export default function CalendarEditScheduleDialog () {
-  const { scheduleToEdit, closeSchedule, updateSchedule } = useCalendar()
+  const { scheduleToEdit, finishToEditSchedule, updateSchedule, accounts } = useCalendar()
+
+  const defaultValues = useMemo(() => {
+    return createFormValueFromSchedule(scheduleToEdit ?? {}, accounts)
+  }, [scheduleToEdit, accounts])
 
   return (
     <Dialog
-      fullWidth maxWidth="md"
-      open={!!scheduleToEdit} onClose={closeSchedule}>
+      fullWidth maxWidth="sm"
+      open={!!scheduleToEdit} onClose={finishToEditSchedule}>
       <DialogTitle>編集</DialogTitle>
       {scheduleToEdit && (
         <EditScheduelForm
-          schedule={scheduleToEdit}
-          onCancel={() => closeSchedule()}
+          accounts={accounts}
+          defaultValues={defaultValues}
+          onCancel={finishToEditSchedule}
           onSubmit={(schedule) => {
             updateSchedule({
               ...scheduleToEdit,
               ...schedule,
             })
-            closeSchedule()
+            finishToEditSchedule()
           }} />
       )}
     </Dialog>

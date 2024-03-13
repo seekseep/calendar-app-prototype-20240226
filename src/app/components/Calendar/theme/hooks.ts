@@ -27,10 +27,10 @@ const defaultCalendarThemeContextValue:CalendarThemeContextValue = {
   scheduleHeight: 28,
   scheduleRowHeight: 30,
   zIndex: {
-    rowHead: 500,
-    timeRulerHead: 601,
-    timeRulerBody: 600,
-    dailyNote: 500
+    rowHead: 600,
+    timeRulerHead: 501,
+    timeRulerBody: 500,
+    dailyNote: 600
   }
 }
 

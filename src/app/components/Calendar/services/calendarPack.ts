@@ -21,10 +21,14 @@ export function createRows (
 
   const schedulesByDateAndAccountId = schedules.reduce((acc, schedule) => {
     const dateKey = format(schedule.startedAt, 'yyyy-MM-dd')
-    const accountId = schedule.accountId
-    if (!acc[dateKey]) acc[dateKey] = {}
-    if (!acc[dateKey][accountId]) acc[dateKey][accountId] = []
-    acc[dateKey][accountId].push(schedule)
+
+    const accountIds = [...schedule.teacherIds, ...schedule.studentIds]
+    for (const accountId of accountIds) {
+      if (!acc[dateKey]) acc[dateKey] = {}
+      if (!acc[dateKey][accountId]) acc[dateKey][accountId] = []
+      acc[dateKey][accountId].push(schedule)
+    }
+
     return acc
   }, {} as Record<string, Record<string, Schedule[]>>)
 
@@ -45,20 +49,22 @@ export function createRows (
       ]
     }
 
-    for (let account of accounts) {
+    const teachers = accounts.filter(account => account.type === 'TEACHER')
+
+    for (const teacher of teachers) {
       const accountRow: CalendarScheduleRowGroupPayload = {
-        name: account.name,
+        name: teacher.name,
         type: 'schedule',
         rowCount: 0,
         rows: [],
-        note: dailyNoteByDateAndReourceId[dateKey]?.[account.id] ?? undefined,
+        note: dailyNoteByDateAndReourceId[dateKey]?.[teacher.id] ?? undefined,
         keyValueSets: [
           { key: 'date', value: dateKey },
-          { key: 'accountId', value: account.id },
+          { key: 'accountId', value: teacher.id },
         ]
       }
 
-      const schedules = schedulesByDateAndAccountId[format(date, 'yyyy-MM-dd')]?.[account.id] ?? []
+      const schedules = schedulesByDateAndAccountId[format(date, 'yyyy-MM-dd')]?.[teacher.id] ?? []
       for (let schedule of schedules) {
         if (typeof accountRow.rows[schedule.row] === 'undefined') {
           accountRow.rows[schedule.row] = {

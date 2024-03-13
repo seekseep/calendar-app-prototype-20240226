@@ -1,4 +1,4 @@
-import { DailyNote, Schedule } from "@/app/types"
+import { Account, DailyNote, Schedule } from "@/app/types"
 
 export interface CalendarSettings {
   startDate: string
@@ -25,6 +25,7 @@ export interface CalendarEvents {
   onChangeOptions?: (options: CalendarOptions) => any
   onCreateSchedule?: (schedule: Schedule) => any
   onUpdateSchedule?: (schedule: UpdateScheduleInput) => any
+  onBulkUpdateSchedules?: (schedules: UpdateScheduleInput[]) => any
   onDeleteSchedule?: (schedule: Schedule) => any
   onCreateDailyNote?: (dailyNote: DailyNote) => any
   onUpdateDailyNote?: (dailyNote: UpdateDailyNoteInput) => any
@@ -33,16 +34,22 @@ export interface CalendarEvents {
 export type CalendarState = (
   CalendarSettings
   & {
+    accounts: Account[]
     tags: string[]
     status: CalendarStatus
     rows: CalendaRowPayload[]
     rowsUpdatedAt: number
     cancledSchedules: Schedule[]
+    // NOTE: UI
+    selectedSchedules: Schedule[]
     scheduleToEdit: Schedule | null
     schedulesToEdit: Schedule[] | null
+    scheduleToDelete: Schedule | null
+    schedulesToDelete: Schedule[] | null
     dailyNoteToEditTag: Partial<Pick<DailyNote, 'id'>> & Omit<DailyNote, 'id'> | null
     dailyNoteToEditBody: Partial<Pick<DailyNote, 'id'>> & Omit<DailyNote, 'id'> | null
-    selectedSchedules: Schedule[]
+    scheduleMenu: { schedule: Schedule, anchorEle: HTMLElement } | null
+    tagMenu: { dailyNote: DailyNote, anchorEle: HTMLElement } | null
   }
 )
 
@@ -50,19 +57,29 @@ export type CalendarHelpers = {
   changeOptions: (options: CalendarOptions) => any
   createSchedule: (schedule: Schedule) => any
   updateSchedule: (schedule: UpdateScheduleInput) => any
+  bulkUpdateSchedules: (schedules: UpdateScheduleInput[]) => any
   deleteSchedule: (schedule: Schedule) => any
-  openSchedule: (schedule: Schedule) => any
-  openSchedules: (schedules: Schedule[]) => any
-  closeSchedule: () => any
-  closeSchedules: () => any
-  openDailyNoteTag: (dailyNote: Partial<Pick<DailyNote, 'id'>> & Omit<DailyNote, 'id'>) => any
-  closeDailyNoteTag: () => any
-  openDailyNoteBody: (dailyNote: Partial<Pick<DailyNote, 'id'>> & Omit<DailyNote, 'id'>) => any
-  closeDailyNoteBody: () => any
   createDailyNote: (dailyNote: DailyNote) => any
   updateDailyNote: (dailyNote: UpdateDailyNoteInput) => any
+  openSchedule: (schedule: Schedule, anchorEle: HTMLElement) => any
+  closeSchedule: () => any
+  openTagMenu: (dailyNote: DailyNote, anchorEle: HTMLElement) => any
+  closeTagMenu: () => any
+  startToEditSchedule: (schedules: Schedule) => any
+  finishToEditSchedule: () => any
+  startToEditSchedules: (schedules: Schedule[]) => any
+  finishToEditSchedules: () => any
+  startToDeleteSchedule: (schedules: Schedule) => any
+  finishToDeleteSchedule: () => any
+  startToDeleteSchedules: (schedules: Schedule[]) => any
+  finishToDeleteSchedules: () => any
+  startToEditDailyNoteTag: (dailyNote: DailyNote) => any
+  finishToEditDailyNoteTag: () => any
+  startToEditDailyNoteBody: (dailyNote: DailyNote) => any
+  finishToEditDailyNoteBody: () => any
   toggleSelectedSchedule: (schedule: Schedule) => any
   clearSelectedSchedules: () => any
+  selectAllSchedules: () => any
 }
 
 export type CalendarContextValue = (

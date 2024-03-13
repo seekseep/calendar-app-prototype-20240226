@@ -4,9 +4,11 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react"
 
 import { createRows } from "./services/calendarPack"
 import { useCalendarTheme, useDailyNoteWidth, useHourHeight, useHourWidth, useRowHeaderWidth, useScheduleRowHeight } from "./theme/hooks"
-import { CalendarContextValue, CalendarEvents, CalendarOptions, CalendarSettings, CalendarStatus, UpdateDailyNoteInput, UpdateScheduleInput } from "./types"
+import { CalendarContextValue, CalendarEvents, CalendarHelpers, CalendarOptions, CalendarSettings, CalendarStatus, UpdateDailyNoteInput, UpdateScheduleInput } from "./types"
 
 import { Account, DailyNote, Schedule } from "@/app/types"
+
+const noop = () => undefined
 
 const defaultCalendarContextValue: CalendarContextValue = {
   startDate: '1970-01-01',
@@ -18,29 +20,44 @@ const defaultCalendarContextValue: CalendarContextValue = {
   status: 'loading',
   rows: [],
   tags: [],
+  accounts: [],
   cancledSchedules: [],
   selectedSchedules: [],
   rowsUpdatedAt: -1,
   scheduleToEdit: null,
   dailyNoteToEditTag: null,
   dailyNoteToEditBody: null,
-  toggleSelectedSchedule: () => undefined,
-  openSchedule: () => undefined,
-  openSchedules: () => undefined,
-  closeSchedule: () => undefined,
-  changeOptions: () => undefined,
-  createSchedule: () => undefined,
-  updateSchedule: () => undefined,
-  deleteSchedule: () => undefined,
-  openDailyNoteTag: () => undefined,
-  closeDailyNoteTag: () => undefined,
-  openDailyNoteBody: () => undefined,
-  closeDailyNoteBody: () => undefined,
-  createDailyNote: () => undefined,
-  updateDailyNote: () => undefined,
-  clearSelectedSchedules: () => undefined,
-  closeSchedules: () => undefined,
   schedulesToEdit: null,
+  scheduleMenu: null,
+  tagMenu: null,
+  scheduleToDelete: null,
+  schedulesToDelete: null,
+  changeOptions: noop,
+  createSchedule: noop,
+  updateSchedule: noop,
+  bulkUpdateSchedules: noop,
+  deleteSchedule: noop,
+  createDailyNote: noop,
+  updateDailyNote: noop,
+  openSchedule: noop,
+  closeSchedule: noop,
+  openTagMenu: noop,
+  closeTagMenu: noop,
+  startToEditSchedule: noop,
+  finishToEditSchedule: noop,
+  startToEditSchedules: noop,
+  finishToEditSchedules: noop,
+  startToDeleteSchedule: noop,
+  finishToDeleteSchedule: noop,
+  startToDeleteSchedules: noop,
+  finishToDeleteSchedules: noop,
+  startToEditDailyNoteTag: noop,
+  finishToEditDailyNoteTag: noop,
+  startToEditDailyNoteBody: noop,
+  finishToEditDailyNoteBody: noop,
+  toggleSelectedSchedule: noop,
+  clearSelectedSchedules: noop,
+  selectAllSchedules: noop,
 }
 
 export const CalendarContext = createContext<CalendarContextValue>(defaultCalendarContextValue)
@@ -53,6 +70,7 @@ export function useCalendarValue ({
   onChangeOptions,
   onCreateSchedule,
   onUpdateSchedule,
+  onBulkUpdateSchedules,
   onDeleteSchedule,
   onCreateDailyNote,
   onUpdateDailyNote
@@ -64,8 +82,12 @@ export function useCalendarValue ({
 } & CalendarEvents): CalendarContextValue {
   const [status, setStatus] = useState<CalendarStatus>('loading')
 
+  const [scheduleMenu, setScheduleMenu] = useState<{ schedule: Schedule, anchorEle: HTMLElement } | null>(null)
+  const [tagMenu, setTagMenu] = useState<{ dailyNote: DailyNote, anchorEle: HTMLElement } | null>(null)
   const [scheduleToEdit, setScheduleToEdit] = useState<Schedule | null>(null)
+  const [scheduleToDelete, setScheduleToDelete] = useState<Schedule | null>(null)
   const [schedulesToEdit, setSchedulesToEdit] = useState<Schedule[] | null>(null)
+  const [schedulesToDelete, setSchedulesToDelete] = useState<Schedule[] | null>(null)
   const [selectedSchedules, setSelectedSchedules] = useState<Schedule[]>([])
   const [dailyNoteToEditTag, setDailyNoteToEditTag] = useState<Partial<Pick<DailyNote, 'id'>> & Omit<DailyNote, 'id'> | null>(null)
   const [dailyNoteToEditBody, setDailyNoteToEditBody] = useState<Partial<Pick<DailyNote, 'id'>> & Omit<DailyNote, 'id'> | null>(null)
@@ -118,18 +140,7 @@ export function useCalendarValue ({
     setStatus('ready')
   }, [ accounts, schedules ])
 
-  return {
-    ...settings,
-    tags,
-    status,
-    rows,
-    rowsUpdatedAt,
-    scheduleToEdit,
-    dailyNoteToEditTag,
-    dailyNoteToEditBody,
-    cancledSchedules,
-    selectedSchedules,
-    schedulesToEdit,
+  const helpers = useMemo(() => ({
     changeOptions: (updated: Partial<CalendarOptions>) => {
       if (!onChangeOptions) return
       onChangeOptions({
@@ -141,6 +152,30 @@ export function useCalendarValue ({
         hourSectionCount: updated.hourSectionCount ?? settings.hourSectionCount,
       })
     },
+    updateDailyNote (dailyNote: UpdateDailyNoteInput) {
+      if (!onUpdateDailyNote) return
+      onUpdateDailyNote(dailyNote)
+    },
+    createDailyNote (dailyNote: DailyNote) {
+      if (!onCreateDailyNote) return
+      onCreateDailyNote(dailyNote)
+    },
+    createSchedule (schedule: Schedule) {
+      if (!onCreateSchedule) return
+      onCreateSchedule(schedule)
+    },
+    updateSchedule (schedule: UpdateScheduleInput) {
+      if (!onUpdateSchedule) return
+      onUpdateSchedule(schedule)
+    },
+    bulkUpdateSchedules (schedules: UpdateScheduleInput[]) {
+      if (!onBulkUpdateSchedules) return
+      onBulkUpdateSchedules(schedules)
+    },
+    deleteSchedule (schedule: Schedule) {
+      if (!onDeleteSchedule) return
+      onDeleteSchedule(schedule)
+    },
     toggleSelectedSchedule(schedule: Schedule) {
       const index = selectedSchedules.findIndex(s => s.id === schedule.id)
       if (index === -1) {
@@ -151,48 +186,96 @@ export function useCalendarValue ({
         )
       }
     },
+    selectAllSchedules() {
+      setSelectedSchedules(schedules ?? [])
+    },
     clearSelectedSchedules() {
       setSelectedSchedules([])
     },
-    openSchedule: (schedule: Schedule) => {
-      setScheduleToEdit(schedule)
+    openSchedule (schedule, anchorEle) {
+      setScheduleMenu({ schedule, anchorEle })
     },
-    openSchedules: (schedules: Schedule[]) => {
-      setSchedulesToEdit(schedules)
+    closeSchedule () {
+      setScheduleMenu(null)
     },
-    closeSchedules: () => {
-      setSchedulesToEdit(null)
+    openTagMenu(dailyNote, anchorEle) {
+      setTagMenu({ dailyNote, anchorEle })
     },
-    openDailyNoteTag: (dailyNote: Partial<Pick<DailyNote, 'id'>> & Omit<DailyNote, 'id'>) => {
-      setDailyNoteToEditTag(dailyNote)
+    closeTagMenu() {
+      setTagMenu(null)
     },
-    closeDailyNoteTag: () => {
-      setDailyNoteToEditTag(null)
-    },
-    openDailyNoteBody: (dailyNote: Partial<Pick<DailyNote, 'id'>> & Omit<DailyNote, 'id'>) => {
-      setDailyNoteToEditBody(dailyNote)
-    },
-    closeDailyNoteBody: () => {
+    finishToEditDailyNoteBody () {
       setDailyNoteToEditBody(null)
     },
-    closeSchedule: () => {
+    startToEditDailyNoteBody (dailyNote) {
+      setDailyNoteToEditBody(dailyNote)
+    },
+    startToEditDailyNoteTag (dailyNote) {
+      setDailyNoteToEditTag(dailyNote)
+    },
+    finishToEditDailyNoteTag () {
+      setDailyNoteToEditTag(null)
+    },
+    startToEditSchedules (schedules) {
+      setSchedulesToEdit(schedules)
+    },
+    finishToEditSchedules () {
+      setSchedulesToEdit(null)
+    },
+    startToDeleteSchedule (schedule) {
+      setScheduleToDelete(schedule)
+    },
+    finishToDeleteSchedule () {
+      setScheduleToDelete(null)
+    },
+    startToDeleteSchedules (schedules) {
+      setSchedulesToDelete(schedules)
+    },
+    finishToDeleteSchedules () {
+      setSchedulesToDelete(null)
+    },
+    startToEditSchedule (schedule) {
+      setScheduleToEdit(schedule)
+    },
+    finishToEditSchedule () {
       setScheduleToEdit(null)
     },
-    updateDailyNote: (dailyNote: UpdateDailyNoteInput) => {
-      onUpdateDailyNote && onUpdateDailyNote(dailyNote)
-    },
-    createDailyNote: (dailyNote: DailyNote) => {
-      onCreateDailyNote && onCreateDailyNote(dailyNote)
-    },
-    createSchedule: (schedule: Schedule) => {
-      onCreateSchedule && onCreateSchedule(schedule)
-    },
-    updateSchedule: (schedule: UpdateScheduleInput) => {
-      onUpdateSchedule && onUpdateSchedule(schedule)
-    },
-    deleteSchedule: (schedule: Schedule) => {
-      onDeleteSchedule && onDeleteSchedule(schedule)
-    },
+  } as CalendarHelpers), [
+    onChangeOptions,
+    onCreateDailyNote,
+    onCreateSchedule,
+    onDeleteSchedule,
+    onUpdateDailyNote,
+    onUpdateSchedule,
+    onBulkUpdateSchedules,
+    selectedSchedules,
+    settings.endDate,
+    settings.endHour,
+    settings.hourSectionCount,
+    settings.rowDepth,
+    settings.startDate,
+    settings.startHour,
+    schedules,
+  ])
+
+  return {
+    ...settings,
+    ...helpers,
+    accounts: accounts ?? [],
+    tags,
+    status,
+    rows,
+    rowsUpdatedAt,
+    scheduleToEdit,
+    dailyNoteToEditTag,
+    dailyNoteToEditBody,
+    cancledSchedules,
+    selectedSchedules,
+    schedulesToEdit,
+    scheduleMenu,
+    tagMenu,
+    scheduleToDelete,
+    schedulesToDelete,
   }
 }
 

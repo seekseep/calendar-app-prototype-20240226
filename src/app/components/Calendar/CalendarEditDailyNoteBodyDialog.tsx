@@ -13,7 +13,7 @@ function CalendarEditDailyNoteBodyForm ({
 }: {
   dailyNote: Partial<Pick<DailyNote, 'id'>> & Omit<DailyNote, 'id'>
   onClose: () => void
-  onSubmit: (dailyNote: Partial<Pick<DailyNote, 'id'>> & Omit<DailyNote, 'id'>) => void
+  onSubmit: (dailyNote: DailyNote) => void
 }) {
   const methods = useForm<{ body: string }>({
     defaultValues: {
@@ -26,7 +26,8 @@ function CalendarEditDailyNoteBodyForm ({
       onSubmit={methods.handleSubmit(values => {
         onSubmit({
           ...dailyNote,
-          body: values.body
+          body: values.body,
+          id: dailyNote.id ?? '',
         })
       })}>
       <Box p={2}>
@@ -44,32 +45,33 @@ function CalendarEditDailyNoteBodyForm ({
 }
 
 export default function CalednarEditDailyNoteBodyDialog () {
-  const { dailyNoteToEditBody, closeDailyNoteBody, updateDailyNote, createDailyNote } = useCalendar()
+  const {
+    dailyNoteToEditBody,
+    updateDailyNote,
+    createDailyNote,
+    finishToEditDailyNoteBody,
+  } = useCalendar()
 
   return (
     <Dialog
       maxWidth="sm" fullWidth
       open={!!dailyNoteToEditBody}
-      onClose={closeDailyNoteBody}>
+      onClose={finishToEditDailyNoteBody}>
       <DialogTitle>メモの編集</DialogTitle>
       {dailyNoteToEditBody && (
         <CalendarEditDailyNoteBodyForm
           dailyNote={dailyNoteToEditBody}
-          onClose={closeDailyNoteBody}
+          onClose={finishToEditDailyNoteBody}
           onSubmit={(dailyNote) => {
-            const id = dailyNote.id
-            if (typeof id == 'string') {
-              updateDailyNote({
-                id,
-                ...dailyNote
+            if (dailyNote.id == '') {
+              createDailyNote({
+                ...dailyNote,
+                id: uuid(),
               })
             } else {
-              createDailyNote({
-                id: uuid(),
-                ...dailyNote
-              })
+              updateDailyNote(dailyNote)
             }
-            closeDailyNoteBody()
+            finishToEditDailyNoteBody()
           }} />
       )}
     </Dialog>

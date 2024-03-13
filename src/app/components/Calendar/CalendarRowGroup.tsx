@@ -17,7 +17,7 @@ export default function CalendarGroupRow ({
   row: CalendarRowGroupPayload
   style?: CSSProperties
 }) {
-  const { openDailyNoteBody } = useCalendar()
+  const { startToEditDailyNoteBody } = useCalendar()
   const { dailyNoteWidth, zIndex, scheduleRowHeight } = useCalendarTheme()
   const rowWidth = useCalendarRowWidth(depth)
   const height = row.rowCount * scheduleRowHeight
@@ -55,8 +55,8 @@ export default function CalendarGroupRow ({
               const date = row.keyValueSets.find(set => set.key === 'date')?.value
               if (!date) throw Error('date is not found')
               const resourceId = "TEAM"
-              openDailyNoteBody({
-                id: row.note?.id,
+              startToEditDailyNoteBody({
+                id: row.note?.id ?? '',
                 tag: row.note?.tag ?? '',
                 body: row.note?.body ?? '',
                 date: row.note?.date ?? date,

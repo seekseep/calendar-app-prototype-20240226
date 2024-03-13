@@ -61,6 +61,22 @@ export default function ViewCalendar() {
     }
   })
 
+  const bulkUpdateMutation = useMutation({
+    async mutationFn (inputs: UpdateScheduleInput[]) {
+      await Promise.all(inputs.map(async ({ id, ...data }) => {
+        db.schedule.update({
+          where: {
+            id: { equals: id }
+          },
+          data: data
+        })
+      }))
+    },
+    onSuccess () {
+      scheduleQuery.refetch()
+    }
+  })
+
   const createDailyNoteMutation = useMutation({
     async mutationFn (dailyNote: DailyNote) {
       db.dailyNote.create({
@@ -90,7 +106,6 @@ export default function ViewCalendar() {
     onSuccess () {
       dailyNoteQuery.refetch()
     }
-
   })
 
   return (
@@ -99,6 +114,7 @@ export default function ViewCalendar() {
       options={options}
       onChangeOptions={setOptions}
       onUpdateSchedule={updateMutation.mutate}
+      onBulkUpdateSchedules={bulkUpdateMutation.mutate}
       onCreateDailyNote={createDailyNoteMutation.mutate}
       onUpdateDailyNote={updateDailyNoteMutation.mutate}
       accounts={accountQuery.data}
